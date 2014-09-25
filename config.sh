@@ -1,6 +1,4 @@
 #!/bin/bash
-echo "111"
-
 #curl https://storage.googleapis.com/git-repo-downloads/repo > ~/bin/repo
 REPO=${REPO:-~/bin/repo}
 sync_flags=""
@@ -73,12 +71,11 @@ if [ -n "$2" ]; then
 	cd ..
 fi
 echo MAKE_FLAGS=-j$((CORE_COUNT + 2)) > .tmp-config
-echo CV_DIR=$PWD/dir-cv >> .tmp-config
+echo CV_OBJDIR=$PWD/dir-cv >> .tmp-config
 #echo DEVICE_NAME=$1 >> .tmp-config
 
 #echo DEVICE=hammerhead >> .tmp-config &&
 repo_sync pico-bin
-
 if [ $? -ne 0 ]; then
 	echo Configuration failed
 	exit -1
