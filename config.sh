@@ -75,7 +75,8 @@ echo CV_OBJDIR=$PWD/dir-cv >> .tmp-config
 #echo DEVICE_NAME=$1 >> .tmp-config
 
 #echo DEVICE=hammerhead >> .tmp-config &&
-repo_sync pico-bin
+#repo_sync pico-bin
+repo_sync cv
 if [ $? -ne 0 ]; then
 	echo Configuration failed
 	exit -1
