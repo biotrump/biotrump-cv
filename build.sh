@@ -1,64 +1,238 @@
 #!/bin/bash
 
-# We want to figure out if we need to re-run the firmware
-# extraction routine.  The first time we run build.sh, we
-# store the hash of important files.  On subsequent runs,
-# we check if the hash is the same as the previous run.
-# If the hashes differ, we use a per-device script to redo
-# the firmware extraction
 function configure_device() {
-    hash_file="$OUT/firmware.hash"
+#		if [! out/opencv/static exist]; then
+#			mkdir
+#			cd out/opencv/static
+#			cmake opencv source
+#		fi
 
-    # Make sure that our assumption that device codenames are unique
-    # across vendors is true
-    if [ $(ls -d device/*/$DEVICE 2> /dev/null | wc -l) -gt 1 ] ; then
-        echo $DEVICE is ambiguous \"$(ls -d device/*/$DEVICE 2> /dev/null)\"
-        return 1
-    fi
 
-    # Select which blob setup script to use, if any.  We currently
-    # assume that $DEVICE maps to the filesystem location, which is true
-    # for the devices we support now (oct 2012) that do not require blobs.
-    # The emulator uses a $DEVICE of 'emulator' but its device/ directory
-    # uses the 'goldfish' name.
-    if [ -f device/*/$DEVICE/download-blobs.sh ] ; then
-        important_files="device/*/$DEVICE/download-blobs.sh"
-        script="cd device/*/$DEVICE && ./download-blobs.sh"
-    elif [ -f device/*/$DEVICE/extract-files.sh ] ; then
-        important_files="device/*/$DEVICE/extract-files.sh"
-        script="cd device/*/$DEVICE && ./extract-files.sh"
-    else
-        important_files=
-        script=
-    fi
-
-    # If we have files that are important to look at, we need
-    # to check if they've changed
-    if [ -n "$important_files" ] ; then
-        new_hash=$(cat $important_files | openssl sha1)
-        if [ -f "$hash_file" ] ; then
-            old_hash=$(cat "$hash_file")
-        fi
-        if [ "$old_hash" != "$new_hash" ] ; then
-            echo Blob setup script has changed, re-running &&
-            sh -c "$script" &&
-            mkdir -p "$(dirname "$hash_file")" &&
-            echo "$new_hash" > "$hash_file"
-        fi
-    else
-        rm -f $hash_file
-    fi
+#		cd out/v4l2/
+#		cmake source_path
+#		cd out/pico
+#		cmake source_path
 
     return $?
 }
 
+###cmake config
+###v4l2/v4l2-lib
+function cmake_v4l2_lib(){
+	if [ -f ${V4L2_LIB_DIR}/CMakeLists.txt ]; then
+		if [ ! -d ${V4L2_LIB_OUT} ]; then
+			mkdir ${V4L2_LIB_OUT}
+		else
+			echo ${V4L2_LIB_OUT} exist
+		fi
+		cd ${V4L2_LIB_OUT}
+		cmake ${V4L2_LIB_DIR}
+	else
+		echo "${V4L2_LIB_DIR}/CMakeLists.txt does not exist!"
+		return 1
+	fi
+	cd ${BIOTRUMP_DIR}
+	return $?
+}
+
+###
+function cmake_v4l2_capture(){
+	if [ -f ${V4L2_CAPTURE_DIR}/CMakeLists.txt ]; then
+		if [ ! -d ${V4L2_CAPTURE_OUT} ]; then
+			mkdir ${V4L2_CAPTURE_OUT}
+		else
+			echo ${V4L2_CAPTURE_OUT} exist
+		fi
+		cd ${V4L2_CAPTURE_OUT}
+		cmake ${V4L2_CAPTURE_DIR}
+	else
+		echo "${V4L2_CAPTURE_DIR}/CMakeLists.txt does not exist!"
+		return 1
+	fi
+	cd ${BIOTRUMP_DIR}
+	return $?
+}
+
+function cmake_pico_bin(){
+	if [ -f ${PICOBIN_DIR}/CMakeLists.txt ]; then
+		if [ ! -d ${PICOBIN_OUT} ]; then
+			mkdir ${PICOBIN_OUT}
+		else
+			echo ${PICOBIN_OUT} exists
+		fi
+		cd ${PICOBIN_OUT}
+		cmake ${PICOBIN_DIR}
+	else
+		echo "${PICOBIN_DIR}/CMakeLists.txt does not exist!"
+		return 1
+	fi
+	cd ${BIOTRUMP_DIR}
+	return $?
+}
+
+function cmake_pico(){
+	if [ -f ${PICO_DIR}/CMakeLists.txt ]; then
+		if [ ! -d ${PICO_OUT} ]; then
+			mkdir ${PICO_OUT}
+		else
+			echo ${PICO_OUT} exists
+		fi
+		cd ${PICO_OUT}
+		cmake ${PICO_DIR}
+	else
+		echo "${PICO_DIR}/CMakeLists.txt does not exist!"
+		return 1
+	fi
+	cd ${BIOTRUMP_DIR}
+	return $?
+}
+
+function cmake_config(){
+#cmake or cmake-gui first
+	mkdir ${BIOTRUMP_OUT}/build
+	cd ${BIOTRUMP_OUT}/build
+	cmake ${BIOTRUMP_DIR}
+
+	cmake_v4l2_lib
+	ret=$?
+	echo -ne \\a
+	if [ $ret -ne 0 ]; then
+		echo "cmake error"
+		return $ret
+	fi
+
+	### v4l2/v4l-capture
+	cmake_v4l2_capture
+	ret=$?
+	echo -ne \\a
+	if [ $ret -ne 0 ]; then
+		echo "cmake error"
+		return $ret
+	fi
+
+	###PICO face detection
+	cmake_pico
+	ret=$?
+	echo -ne \\a
+	if [ $ret -ne 0 ]; then
+		echo "cmake error"
+		return $ret
+	fi
+
+	cmake_pico_bin
+	ret=$?
+	echo -ne \\a
+	if [ $ret -ne 0 ]; then
+		echo "cmake error"
+		return $ret
+	fi
+	return 0
+}
+
+#### make targets
+###v4l2/v4l2-lib
+function v4l2_lib(){
+	ret=1
+#	echo *=$@
+#	read
+	if [ -d ${V4L2_LIB_OUT} ]; then
+		cd ${V4L2_LIB_OUT}
+		make $@
+		ret=$?
+	else
+		echo "${V4L2_LIB_OUT} does not exist."
+	fi
+	cd ${BIOTRUMP_DIR}
+	return ${ret}
+}
+
+###
+function v4l2_capture(){
+	ret=1
+#	echo *=$@
+#	read
+	if [ -d ${V4L2_CAPTURE_OUT} ]; then
+		cd ${V4L2_CAPTURE_OUT}
+		make $@
+		ret=$?
+	else
+		echo "${V4L2_CAPTURE_OUT} does not exist."
+	fi
+	cd ${BIOTRUMP_DIR}
+	return $ret
+}
+
+function pico_bin(){
+	ret=1
+#	echo *=$@
+#	read
+	if [ -d ${PICOBIN_OUT} ]; then
+		cd ${PICOBIN_OUT}
+		make $@
+		ret=$?
+	else
+		echo "${PICOBIN_OUT} does not exist."
+	fi
+	cd ${BIOTRUMP_DIR}
+	return $ret
+}
+
+function pico(){
+	ret=1
+#	echo *=$@
+#	read
+	if [ -d ${PICO_OUT} ]; then
+		cd ${PICO_OUT}
+		make $@
+		ret=$?
+	else
+		echo "${PICO_OUT} does not exist"
+	fi
+	cd ${BIOTRUMP_DIR}
+	return $ret
+}
+
+function make-all(){
+#cmake or cmake-gui first
+	v4l2_lib $*
+	ret=$?
+	echo -ne \\a
+	if [ $ret -ne 0 ]; then
+		echo "make error"
+	fi
+
+	### v4l2/v4l-capture
+	v4l2_capture $*
+	ret=$?
+	echo -ne \\a
+	if [ $ret -ne 0 ]; then
+		echo "make error"
+	fi
+
+	###PICO face detection
+	pico $*
+	ret=$?
+	echo -ne \\a
+	if [ $ret -ne 0 ]; then
+		echo "make error"
+	fi
+
+	pico_bin $*
+	ret=$?
+	echo -ne \\a
+	if [ $ret -ne 0 ]; then
+		echo "make error"
+	fi
+}
+
 unset CDPATH
-. setup.sh &&
-if [ -f patches/patch.sh ] ; then
-    . patches/patch.sh
-fi &&
-configure_device &&
-time nice -n19 make $MAKE_FLAGS $@
+. setup.sh
+#if [ -f patches/patch.sh ] ; then
+#    . patches/patch.sh
+#fi &&
+cmake_config
+make-all $MAKE_FLAGS $@
+#time nice -n19 make-all $MAKE_FLAGS $@
 
 ret=$?
 echo -ne \\a
@@ -74,8 +248,11 @@ else
 		exit 0
 	fi
 	case "$1" in
-	"gecko")
-		echo Run \|./flash.sh gecko\| to update gecko
+	"openCV")
+		echo Run \|openCV\| to build openCV only
+		;;
+	"pico")
+		echo Run \|pico\| to build pico only
 		;;
 	*)
 		echo Run \|./flash.sh\| to flash all partitions of your device
