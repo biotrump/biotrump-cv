@@ -3,6 +3,10 @@
 . load-config.sh
 
 export	OPENCV_DIR &&
+export 	OPENCV_BUILD_SHARED_LIBS &&
+export 	OPENCV_BRANCH &&
+export 	OPENCV_SRC &&
+export 	OPENCV_OUT &&
 export	BIOTRUMP_DIR &&
 export	BIOTRUMP_OUT &&
 export	V4L2_LIB_DIR &&

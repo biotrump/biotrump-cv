@@ -1,10 +1,10 @@
 #!/bin/bash
-echo BIOTRUMP_DIR=$BIOTRUMP_DIR
+#echo BIOTRUMP_DIR=$BIOTRUMP_DIR
 if [[ -z "$BIOTRUMP_DIR" ]]; then
   BIOTRUMP_DIR=$(cd `dirname ${BASH_SOURCE[0]}`; pwd)
-  echo ">>>BIOTRUMP_DIR=$BIOTRUMP_DIR"
+#  echo ">>>BIOTRUMP_DIR=$BIOTRUMP_DIR"
 fi
-echo "<<<BIOTRUMP_DIR=$BIOTRUMP_DIR"
+#echo "<<<BIOTRUMP_DIR=$BIOTRUMP_DIR"
 
 . "$BIOTRUMP_DIR/.config"
 if [ $? -ne 0 ]; then

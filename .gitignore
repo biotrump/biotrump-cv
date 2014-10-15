@@ -13,10 +13,10 @@ tags
 tegra/
 
 #ignore cmake meta files
-CMakeCache.txt
-CMakeFiles
-Makefile
-*.cmake
+#CMakeCache.txt
+#CMakeFiles
+#Makefile
+#*.cmake
 
 ##ignore the sub folders managed by repos
 openCV

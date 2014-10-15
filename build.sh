@@ -18,6 +18,23 @@ function configure_device() {
 
 ###cmake config
 ###v4l2/v4l2-lib
+function cmake_opencv(){
+	if [ -f ${OPENCV_SRC}/CMakeLists.txt ]; then
+		if [ ! -d ${OPENCV_OUTT} ]; then
+			mkdir ${OPENCV_OUTT}
+		else
+			echo $OPENCV_OUT} exist
+		fi
+		cd ${OPENCV_OUT}
+		cmake ${OPENCV_SRC} -DBUILD_SHARED_LIBS=${BUILD_SHARED_LIBS}
+	else
+		echo "${OPENCV_SRC}/CMakeLists.txt does not exist!"
+		return 1
+	fi
+	cd ${BIOTRUMP_DIR}
+	return $?
+}
+
 function cmake_v4l2_lib(){
 	if [ -f ${V4L2_LIB_DIR}/CMakeLists.txt ]; then
 		if [ ! -d ${V4L2_LIB_OUT} ]; then
@@ -89,15 +106,35 @@ function cmake_pico(){
 
 function cmake_config(){
 #cmake or cmake-gui first
-	mkdir ${BIOTRUMP_OUT}/build
-	cd ${BIOTRUMP_OUT}/build
-	cmake ${BIOTRUMP_DIR}
+	#cmake to create top build folder
+	ret=0
+#	if [ ! -d ${BIOTRUMP_OUT}/build} ]; then
+#		mkdir ${BIOTRUMP_OUT}/build
+#	fi
+#	cd ${BIOTRUMP_OUT}/build
+	cd ${BIOTRUMP_OUT}
+	cmake -Wno-dev ${BIOTRUMP_DIR}
+	ret=$?
+	echo -ne \\a
+	if [ $ret -ne 0 ]; then
+		echo "top build cmake error"
+		return $ret
+	fi
+	return  $ret
+
+#	cmake_opencv
+#	ret=$?
+#	echo -ne \\a
+#	if [ $ret -ne 0 ]; then
+#		echo "opencv cmake error"
+#		return $ret
+#	fi
 
 	cmake_v4l2_lib
 	ret=$?
 	echo -ne \\a
 	if [ $ret -ne 0 ]; then
-		echo "cmake error"
+		echo "v4l2_lib cmake error"
 		return $ret
 	fi
 
@@ -106,7 +143,7 @@ function cmake_config(){
 	ret=$?
 	echo -ne \\a
 	if [ $ret -ne 0 ]; then
-		echo "cmake error"
+		echo "v4l2_capture cmake error"
 		return $ret
 	fi
 
@@ -115,7 +152,7 @@ function cmake_config(){
 	ret=$?
 	echo -ne \\a
 	if [ $ret -ne 0 ]; then
-		echo "cmake error"
+		echo "pico cmake error"
 		return $ret
 	fi
 
@@ -123,7 +160,7 @@ function cmake_config(){
 	ret=$?
 	echo -ne \\a
 	if [ $ret -ne 0 ]; then
-		echo "cmake error"
+		echo "pico_bin cmake error"
 		return $ret
 	fi
 	return 0
@@ -194,6 +231,28 @@ function pico(){
 
 function make-all(){
 #cmake or cmake-gui first
+
+	#cmake to create top build folder
+#	if [ -d ${BIOTRUMP_OUT}/build ]; then
+#		cd ${BIOTRUMP_OUT}/build
+#		make $@
+#		ret=$?
+#		echo -ne \\a
+#		if [ $ret -ne 0 ]; then
+#			echo "top build make error"
+#			return $ret
+#		fi
+#	fi
+	cd ${BIOTRUMP_OUT}
+	make $@
+	ret=$?
+	echo -ne \\a
+	if [ $ret -ne 0 ]; then
+		echo "top build make error"
+		return $ret
+	fi
+	return 0
+
 	v4l2_lib $*
 	ret=$?
 	echo -ne \\a
@@ -225,14 +284,36 @@ function make-all(){
 	fi
 }
 
-unset CDPATH
-. setup.sh
-#if [ -f patches/patch.sh ] ; then
-#    . patches/patch.sh
-#fi &&
-cmake_config
-make-all $MAKE_FLAGS $@
-#time nice -n19 make-all $MAKE_FLAGS $@
+. setup.sh &&
+if [[ "$#" -eq 0 || "$#" -eq 1 && "$1" == "-j"* ]]; then
+	echo "###: $#, $1"
+	read
+	#"." or "source" to run a script: the script will run in the same process space of the shell.
+	. opencv.sh $MAKE_FLAGS $@ &&
+	#if [ -f patches/patch.sh ] ; then
+	#    . patches/patch.sh
+	#fi &&
+	cmake_config &&
+	time make-all $MAKE_FLAGS $@
+	#time nice -n19 make-all $MAKE_FLAGS $@
+else
+	if [[ "$1" == "-j"* ]]; then
+		MAKE_FLAGS=$1
+		shift
+	fi
+	case "$1" in
+		"openCV")
+			shift
+			. opencv.sh $MAKE_FLAGS $@
+			;;
+		"pico")
+			echo Run \|pico\| to build pico only
+			;;
+		*)
+			echo "unknown args: ./build.sh -j# target "
+			;;
+		esac
+fi
 
 ret=$?
 echo -ne \\a
@@ -243,10 +324,6 @@ if [ $ret -ne 0 ]; then
 	echo Build with \|./build.sh -j1\| for better messages
 	echo If all else fails, use \|rm -rf objdir-gecko\| to clobber gecko and \|rm -rf out\| to clobber everything else.
 else
-	if echo $DEVICE | grep generic > /dev/null ; then
-		echo Run \|./run-emulator.sh\| to start the emulator
-		exit 0
-	fi
 	case "$1" in
 	"openCV")
 		echo Run \|openCV\| to build openCV only
