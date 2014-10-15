@@ -131,28 +131,25 @@ fi
 
 ###PICO
 if [ -d ${BIOTRUMP_DIR}/pico ]; then
-	if [ -f ${BIOTRUMP_DIR}/pico/runtime/pico-bin/C/CMakeLists.txt ]; then
-		PICOBIN_DIR=${PICOBIN_DIR:-${BIOTRUMP_DIR}/pico/runtime/pico-bin/C}
-		echo PICOBIN_DIR=${PICOBIN_DIR} >> .tmp-config
-		PICOBIN_OUT=${PICOBIN_OUT:-${BIOTRUMP_OUT}/pico-bin}
-		if [ ! -d ${PICOBIN_OUT} ]; then
-			mkdir ${PICOBIN_OUT}
-		fi
-		echo PICOBIN_OUT=${PICOBIN_OUT} >> .tmp-config
-	else
-		echo "${BIOTRUMP_DIR}/pico/runtime/pico-bin/C/CMakeLists.txt does not exist!"
-	fi
+#	if [ -f ${BIOTRUMP_DIR}/pico/runtime/pico-bin/C/CMakeLists.txt ]; then
+#		PICOBIN_DIR=${PICOBIN_DIR:-${BIOTRUMP_DIR}/pico/runtime/pico-bin/C}
+#		echo PICOBIN_DIR=${PICOBIN_DIR} >> .tmp-config
+#		PICOBIN_OUT=${PICOBIN_OUT:-${BIOTRUMP_OUT}/pico-bin}
+#		if [ ! -d ${PICOBIN_OUT} ]; then
+#			mkdir ${PICOBIN_OUT}
+#		fi
+#		echo PICOBIN_OUT=${PICOBIN_OUT} >> .tmp-config
+#	else
+#		echo "${BIOTRUMP_DIR}/pico/runtime/pico-bin/C/CMakeLists.txt does not exist!"
+#	fi
 
-	if [ -f ${BIOTRUMP_DIR}/pico/runtime/samples/C/CMakeLists.txt ]; then
-		PICO_DIR=${PICO_DIR:-${BIOTRUMP_DIR}/pico/runtime/samples/C}
+	if [ -f ${BIOTRUMP_DIR}/pico/CMakeLists.txt ]; then
+		PICO_DIR=${PICO_DIR:-${BIOTRUMP_DIR}/pico}
 		echo PICO_DIR=${PICO_DIR} >> .tmp-config
 		PICO_OUT=${PICO_OUT:-${BIOTRUMP_OUT}/pico}
-		if [ ! -d ${PICO_OUT} ]; then
-			mkdir ${PICO_OUT}
-		fi
 		echo PICO_OUT=${PICO_OUT} >> .tmp-config
 	else
-		echo "${BIOTRUMP_DIR}/pico/runtime/samples/C/CMakeLists.txt does not exist!"
+		echo "${BIOTRUMP_DIR}/pico/CMakeLists.txt does not exist!"
 	fi
 
 #	if [ -f ${BIOTRUMP_DIR}/pico/learning/sample/CMakeLists.txt ]; then

@@ -105,21 +105,16 @@ function cmake_pico(){
 }
 
 function cmake_config(){
-#cmake or cmake-gui first
 	#cmake to create top build folder
-	ret=0
-#	if [ ! -d ${BIOTRUMP_OUT}/build} ]; then
-#		mkdir ${BIOTRUMP_OUT}/build
-#	fi
-#	cd ${BIOTRUMP_OUT}/build
 	cd ${BIOTRUMP_OUT}
 	cmake -Wno-dev ${BIOTRUMP_DIR}
 	ret=$?
 	echo -ne \\a
 	if [ $ret -ne 0 ]; then
 		echo "top build cmake error"
-		return $ret
 	fi
+#	echo ">>>> $?"
+#	read
 	return  $ret
 
 #	cmake_opencv
@@ -230,19 +225,14 @@ function pico(){
 }
 
 function make-all(){
-#cmake or cmake-gui first
+#building base lib first!
+	v4l2_lib $*
+	ret=$?
+	echo -ne \\a
+	if [ $ret -ne 0 ]; then
+		echo "make error"
+	fi
 
-	#cmake to create top build folder
-#	if [ -d ${BIOTRUMP_OUT}/build ]; then
-#		cd ${BIOTRUMP_OUT}/build
-#		make $@
-#		ret=$?
-#		echo -ne \\a
-#		if [ $ret -ne 0 ]; then
-#			echo "top build make error"
-#			return $ret
-#		fi
-#	fi
 	cd ${BIOTRUMP_OUT}
 	make $@
 	ret=$?
@@ -252,13 +242,6 @@ function make-all(){
 		return $ret
 	fi
 	return 0
-
-	v4l2_lib $*
-	ret=$?
-	echo -ne \\a
-	if [ $ret -ne 0 ]; then
-		echo "make error"
-	fi
 
 	### v4l2/v4l-capture
 	v4l2_capture $*
@@ -284,10 +267,10 @@ function make-all(){
 	fi
 }
 
-. setup.sh &&
+ret=1
+. setup.sh
 if [[ "$#" -eq 0 || "$#" -eq 1 && "$1" == "-j"* ]]; then
-	echo "###: $#, $1"
-	read
+#	echo "###: $#, $1"
 	#"." or "source" to run a script: the script will run in the same process space of the shell.
 	. opencv.sh $MAKE_FLAGS $@ &&
 	#if [ -f patches/patch.sh ] ; then
@@ -303,39 +286,71 @@ else
 	fi
 	case "$1" in
 		"openCV")
+			echo "building openCV only..."
 			shift
 			. opencv.sh $MAKE_FLAGS $@
+			ret=$?
 			;;
+
+		"v4l2")
+			###v4l2 lib
+			echo "buiding v4l2 library only..."
+			shift
+			#cmake has prepared the make!
+			if [ -f ${V4L2_LIB_OUT}/Makefile ]; then
+				pushd ${V4L2_LIB_OUT}
+				time make $@
+				ret=$?
+				popd
+			else
+				echo ${V4L2_LIB_OUT}/Makefile does not exists.
+				echo please \"./build.sh\" first
+			fi
+			;;
+
 		"pico")
-			echo Run \|pico\| to build pico only
+			###PICO face detection
+			echo "buiding pico only..."
+			shift
+			#cmake has prepared the make!
+			if [ -f ${PICO_OUT}/Makefile ]; then
+				pushd ${PICO_OUT}
+				time make $MAKE_FLAGS $@
+				ret=$?
+				popd
+			else
+				echo ${PICO_OUT}/Makefile does not exists.
+				echo please \"./build.sh\" first
+			fi
 			;;
+
 		*)
 			echo "unknown args: ./build.sh -j# target "
 			;;
 		esac
 fi
 
-ret=$?
+#ret=$?
 echo -ne \\a
 if [ $ret -ne 0 ]; then
 	echo
 	echo \> Build failed\! \<
 	echo
 	echo Build with \|./build.sh -j1\| for better messages
-	echo If all else fails, use \|rm -rf objdir-gecko\| to clobber gecko and \|rm -rf out\| to clobber everything else.
-else
-	case "$1" in
-	"openCV")
-		echo Run \|openCV\| to build openCV only
-		;;
-	"pico")
-		echo Run \|pico\| to build pico only
-		;;
-	*)
-		echo Run \|./flash.sh\| to flash all partitions of your device
-		;;
-	esac
-	exit 0
+	echo If all else fails, use \|rm -rf out/openCV\| to clobber openCV or \|rm -rf out\| to clobber everything else.
+#else
+#	case "$1" in
+#	"openCV")
+#		echo Run \|openCV\| to build openCV only
+#		;;
+#	"pico")
+#		echo Run \|pico\| to build pico only
+#		;;
+#	*)
+#		echo Run \|./flash.sh\| to flash all partitions of your device
+#		;;
+#	esac
+#	exit 0
 fi
 
 exit $ret
