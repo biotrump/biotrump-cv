@@ -1,6 +1,21 @@
 #!/bin/bash
 #. setup.sh
+echo opencv.sh
+#make openCV out folder
+if [ ! -d ${BIOTRUMP_OUT} ]; then
+  echo "${BIOTRUMP_OUT} does not exist. mkdir"
+  mkdir ${BIOTRUMP_OUT}
+fi
+if [ ! -d ${BIOTRUMP_OUT}/openCV ]; then
+  echo "${BIOTRUMP_OUT}/openCV does not exist. mkdir"
+  mkdir ${BIOTRUMP_OUT}/openCV
+fi
+if [ ! -d ${OPENCV_OUT} ]; then
+  echo "${OPENCV_OUT} does not exis. mkdir"
+  mkdir ${OPENCV_OUT}
+fi
 pushd ${OPENCV_OUT}
+read
 #echo "*********$@"
 
 #cmake	-DBUILD_EXAMPLES:BOOL=ON -DBUILD_JASPER:BOOL=ON -DBUILD_JPEG:BOOL=ON \
