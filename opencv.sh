@@ -15,7 +15,7 @@ if [ ! -d ${OPENCV_OUT} ]; then
   mkdir ${OPENCV_OUT}
 fi
 pushd ${OPENCV_OUT}
-read
+#read
 #echo "*********$@"
 
 #cmake	-DBUILD_EXAMPLES:BOOL=ON -DBUILD_JASPER:BOOL=ON -DBUILD_JPEG:BOOL=ON \

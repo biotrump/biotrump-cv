@@ -1,6 +1,6 @@
 {
   "name": "Kate"
-, "files": [ { "git": 1 } ]
+, "files": [ {"recursive": 1 } ]
 , "build": {
     "directory": "build"
   , "build": "make all"
