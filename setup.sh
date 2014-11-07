@@ -16,7 +16,9 @@ export	V4L2_CAPTURE_OUT &&
 export	PICOBIN_DIR &&
 export	PICOBIN_OUT &&
 export	PICO_DIR &&
-export	PICO_OUT
+export	PICO_OUT &&
+export DSP_ICA_DIR &&
+export DSP_ICA_OUT
 
 #export USE_CCACHE=yes &&
 #export GECKO_PATH &&

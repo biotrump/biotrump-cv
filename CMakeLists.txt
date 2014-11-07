@@ -33,7 +33,7 @@ endif()
 # ----------------------------------------------------------------------------
 #add_subdirectory(v4l2/v4l2-lib ${V4L2_LIB_OUT})
 #add_subdirectory(v4l2/v4l-capture ${V4L2_CAPTURE_OUT})
+add_subdirectory(dsp/ica)
 add_subdirectory(v4l2/v4l2-lib)
 add_subdirectory(v4l2/v4l-capture)
 add_subdirectory(pico)
-add_subdirectory(dsp/ica)

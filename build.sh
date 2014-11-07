@@ -269,6 +269,7 @@ function make-all(){
 
 ret=1
 . setup.sh
+export
 if [[ "$#" -eq 0 || "$#" -eq 1 && "$1" == "-j"* ]]; then
 #	echo "###: $#, $1"
 	#"." or "source" to run a script: the script will run in the same process space of the shell.

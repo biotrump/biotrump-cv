@@ -2,6 +2,12 @@
 #import env var to cmake property from .config
 #$ENV{VAR} to get shell env
 #can this be auto-generated?
+#	message( "PackageName_INCLUDE_DIRS:""${PackageName_INCLUDE_DIRS}" )
+#	message( "PackageName_INCLUDES:""${PackageName_INCLUDES}")
+#	message( "PackageName_LIBRARIES:""${PackageName_LIBRARIES}")
+#	message( "PackageName_LIBS:""${PackageName_LIBS}")
+#	message( "PackageName_DEFINITIONS:""${PackageName_DEFINITIONS}")
+
 set(OPENCV_BUILD_SHARED_LIBS	$ENV{OPENCV_BUILD_SHARED_LIBS})
 set(OPENCV_BRANCH	$ENV{OPENCV_BRANCH})
 set(OPENCV_SRC	$ENV{OPENCV_SRC})
@@ -17,4 +23,9 @@ set(PICO_DIR $ENV{PICO_DIR})
 set(PICO_OUT $ENV{PICO_OUT})
 set(BIOTRUMP_DIR $ENV{BIOTRUMP_DIR})
 set(BIOTRUMP_OUT $ENV{BIOTRUMP_OUT})
+set(DSP_ICA_DIR $ENV{DSP_ICA_DIR})
+set(DSP_ICA_OUT $ENV{DSP_ICA_OUT})
+set(DSP_ICA_LIBS $ENV{DSP_ICA_OUT})
+set(DSP_ICA_INCLUDES $ENV{DSP_ICA_DIR})
+
 

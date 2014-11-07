@@ -159,6 +159,19 @@ else
 	echo "${BIOTRUMP_DIR}/pico does not exist!"
 fi
 
+if [ -d ${BIOTRUMP_DIR}/dsp/ica ]; then
+	if [ -f ${BIOTRUMP_DIR}/dsp/ica/CMakeLists.txt ]; then
+		DSP_ICA_DIR=${DSP_ICA_DIR:-${BIOTRUMP_DIR}/dsp/ica}
+		echo DSP_ICA_DIR=${DSP_ICA_DIR} >> .tmp-config
+		DSP_ICA_OUT=${DSP_ICA_OUT:-${BIOTRUMP_OUT}/dsp/ica}
+		echo DSP_ICA_OUT=${DSP_ICA_OUT} >> .tmp-config
+	else
+		echo "${BIOTRUMP_DIR}/dsp/ica/CMakeLists.txt does not exist!"
+	fi
+else
+	echo "${BIOTRUMP_DIR}/dsp/ica does not exist!"
+fi
+
 #sync codes
 #repo_sync pico-bin
 repo_sync cv
