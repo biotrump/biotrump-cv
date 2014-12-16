@@ -25,6 +25,9 @@ case `uname` in
 "Linux")
 	CORE_COUNT=`grep processor /proc/cpuinfo | wc -l`
 	;;
+CYGWIN*)
+	CORE_COUNT=`grep processor /proc/cpuinfo | wc -l`
+	;;
 *)
 	echo Unsupported platform: `uname`
 	exit -1
