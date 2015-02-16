@@ -9,6 +9,8 @@ export 	OPENCV_SRC &&
 export 	OPENCV_OUT &&
 export	BIOTRUMP_DIR &&
 export	BIOTRUMP_OUT &&
+export	FFTS_DIR &&
+export	FFTS_LIB_DIR &&
 export	V4L2_LIB_DIR &&
 export	V4L2_LIB_OUT &&
 export	V4L2_CAPTURE_DIR &&

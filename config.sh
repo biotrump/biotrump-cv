@@ -104,6 +104,20 @@ OPENCV_OUT=${OPENCV_OUT:-${BIOTRUMP_OUT}/openCV/${OPENCV_BRANCH}-${}}
 echo OPENCV_OUT=${OPENCV_OUT} >> .tmp-config
 echo OPENCV_DIR=${OPENCV_OUT} >> .tmp-config
 
+###ffts/lib/libffts.x86.a
+#x86, arm ....
+if [ -d ${BIOTRUMP_DIR}/ffts ]; then
+	FFTS_DIR=${FFTS_DIR:-${BIOTRUMP_DIR}/ffts}
+	echo FFTS_DIR=${FFTS_DIR} >> .tmp-config
+	if [ ! -d ${FFTS_DIR}/lib ]; then
+		mkdir ${FFTS_DIR}/lib
+	fi
+	FFTS_LIB_DIR=${FFTS_LIB_DIR:-${FFTS_DIR}/lib}
+	echo FFTS_LIB_DIR=${FFTS_LIB_DIR} >> .tmp-config
+else
+	echo "${BIOTRUMP_DIR}/ffts does not exist!"
+fi
+
 ###v4l2/v4l2-lib
 if [ -d ${BIOTRUMP_DIR}/v4l2/v4l2-lib ]; then
 	if [ -f ${BIOTRUMP_DIR}/v4l2/v4l2-lib/CMakeLists.txt ]; then
