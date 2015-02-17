@@ -104,6 +104,14 @@ OPENCV_OUT=${OPENCV_OUT:-${BIOTRUMP_OUT}/openCV/${OPENCV_BRANCH}-${}}
 echo OPENCV_OUT=${OPENCV_OUT} >> .tmp-config
 echo OPENCV_DIR=${OPENCV_OUT} >> .tmp-config
 
+#sync codes
+#repo_sync pico-bin
+repo_sync cv
+if [ $? -ne 0 ]; then
+	echo Configuration failed
+	exit -1
+fi
+
 ###ffts/lib/libffts.x86.a
 #x86, arm ....
 if [ -d ${BIOTRUMP_DIR}/ffts ]; then
@@ -187,14 +195,6 @@ if [ -d ${BIOTRUMP_DIR}/dsp/ica ]; then
 	fi
 else
 	echo "${BIOTRUMP_DIR}/dsp/ica does not exist!"
-fi
-
-#sync codes
-#repo_sync pico-bin
-repo_sync cv
-if [ $? -ne 0 ]; then
-	echo Configuration failed
-	exit -1
 fi
 
 mv .tmp-config .config
