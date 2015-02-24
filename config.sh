@@ -5,7 +5,7 @@ sync_flags=""
 
 repo_sync() {
 	rm -rf .repo/manifest* &&
-	$REPO init -u $GITREPO -b $OPENCV_BRANCH -m $1.xml $REPO_INIT_FLAGS &&
+	$REPO init -u $GITREPO -b $BRANCH -m $1.xml $REPO_INIT_FLAGS &&
 	$REPO sync $sync_flags $REPO_SYNC_FLAGS
 	ret=$?
 	if [ "$GITREPO" = "$GIT_TEMP_REPO" ]; then
@@ -34,6 +34,7 @@ CYGWIN*)
 esac
 
 GITREPO=${GITREPO:-"https://github.com/biotrump/manifest-cv"}
+BRANCH=${BRANCH:-master}
 OPENCV_BRANCH=${OPENCV_BRANCH:-2.4.x}
 while [ $# -ge 1 ]; do
 	case $1 in
@@ -70,7 +71,7 @@ if [ -n "$2" ]; then
 	cd $GITREPO &&
 	git add $1.xml &&
 	git commit -m "manifest" &&
-	git branch -m $OPENCV_BRANCH &&
+	git branch -m $BRANCH &&
 	cd ..
 fi
 
