@@ -10,6 +10,10 @@ export 	OPENCV_OUT &&
 export	BIOTRUMP_DIR &&
 export	BIOTRUMP_OUT &&
 export	FFTS_DIR &&
+export	LAPACK_SRC &&
+export	LAPACK_OUT &&
+export	ATLAS_SRC &&
+export	ATLAS_OUT &&
 export	FFTS_LIB_DIR &&
 export	V4L2_LIB_DIR &&
 export	V4L2_LIB_OUT &&

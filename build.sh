@@ -273,7 +273,9 @@ export
 if [[ "$#" -eq 0 || "$#" -eq 1 && "$1" == "-j"* ]]; then
 #	echo "###: $#, $1"
 	#"." or "source" to run a script: the script will run in the same process space of the shell.
-	. ffts.sh
+	. $ATLAS_SRC/build.sh  $MAKE_FLAGS $@ &&
+	. lapack.sh $MAKE_FLAGS $@ &&
+	. ffts.sh $MAKE_FLAGS $@ &&
 	. opencv.sh $MAKE_FLAGS $@ &&
 	#if [ -f patches/patch.sh ] ; then
 	#    . patches/patch.sh
@@ -294,6 +296,12 @@ else
 			ret=$?
 			;;
 
+		"lapack")
+			echo "building lapack only..."
+			shift
+			. lapack.sh $MAKE_FLAGS $@
+			ret=$?
+			;;
 		"ffts")
 			echo "building ffts only..."
 			shift
