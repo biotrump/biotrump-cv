@@ -34,7 +34,8 @@ CYGWIN*)
 esac
 
 GITREPO=${GITREPO:-"https://github.com/biotrump/manifest-cv"}
-BRANCH=${BRANCH:-master}
+#BRANCH=${BRANCH:-master}
+BRANCH=${BRANCH:-opencv-2.4.x}
 OPENCV_BRANCH=${OPENCV_BRANCH:-2.4.x}
 while [ $# -ge 1 ]; do
 	case $1 in
