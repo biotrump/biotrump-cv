@@ -132,7 +132,7 @@ fi
 if [ -d ${BIOTRUMP_DIR}/lapack ]; then
 	LAPACK_SRC=${LAPACK_SRC:-${BIOTRUMP_DIR}/lapack}
 	echo LAPACK_SRC=${LAPACK_SRC} >> .tmp-config
-	LAPACK_OUT=${LAPACK_OUT:-${BIOTRUMP_OUT}/lapack/}
+	LAPACK_OUT=${LAPACK_OUT:-${BIOTRUMP_OUT}/lapack}
 	echo LAPACK_OUT=${LAPACK_OUT} >> .tmp-config
 else
 	echo "${BIOTRUMP_DIR}/lapack does not exist!"
@@ -142,7 +142,7 @@ fi
 if [ -d ${BIOTRUMP_DIR}/ATLAS ]; then
 	ATLAS_SRC=${ATLAS_SRC:-${BIOTRUMP_DIR}/ATLAS}
 	echo ATLAS_SRC=${ATLAS_SRC} >> .tmp-config
-	ATLAS_OUT=${ATLAS_OUT:-${BIOTRUMP_OUT}/ATLAS/}
+	ATLAS_OUT=${ATLAS_OUT:-${BIOTRUMP_OUT}/ATLAS}
 	echo ATLAS_OUT=${ATLAS_OUT} >> .tmp-config
 	if [ ! -d ${ATLAS_OUT} ]; then
 		mkdir ${ATLAS_OUT}
