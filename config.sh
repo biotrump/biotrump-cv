@@ -144,6 +144,13 @@ if [ -d ${BIOTRUMP_DIR}/ATLAS ]; then
 	echo ATLAS_SRC=${ATLAS_SRC} >> .tmp-config
 	ATLAS_OUT=${ATLAS_OUT:-${BIOTRUMP_OUT}/ATLAS/}
 	echo ATLAS_OUT=${ATLAS_OUT} >> .tmp-config
+	if [ ! -d ${ATLAS_OUT} ]; then
+		mkdir ${ATLAS_OUT}
+	fi
+	pushd ${ATLAS_OUT}
+	. ${ATLAS_SRC}/atlas.sh config
+#	. ${ATLAS_SRC}\atlas.sh config	arm
+	popd
 else
 	echo "${BIOTRUMP_DIR}/ATLAS does not exist!"
 fi
