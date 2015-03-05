@@ -9,7 +9,6 @@ pushd ${FFTS_DIR}
 
 ./configure --enable-sse --enable-single
 automake --add-missing
-make
 
 time make $@
 popd
