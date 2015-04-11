@@ -34,8 +34,8 @@ CYGWIN*)
 esac
 
 GITREPO=${GITREPO:-"https://github.com/biotrump/manifest-cv"}
-#BRANCH=${BRANCH:-master}
-BRANCH=${BRANCH:-opencv-2.4.x}
+BRANCH=${BRANCH:-master}
+#BRANCH=${BRANCH:-opencv-2.4.x}
 OPENCV_BRANCH=${OPENCV_BRANCH:-2.4.x}
 while [ $# -ge 1 ]; do
 	case $1 in
@@ -147,10 +147,9 @@ if [ -d ${BIOTRUMP_DIR}/ATLAS ]; then
 	if [ ! -d ${ATLAS_OUT} ]; then
 		mkdir ${ATLAS_OUT}
 	fi
-	pushd ${ATLAS_OUT}
-	. ${ATLAS_SRC}/atlas.sh config
-#	. ${ATLAS_SRC}\atlas.sh config	arm
-	popd
+#	pushd ${ATLAS_OUT}
+#	. ${ATLAS_SRC}/atlas.sh config
+#	popd
 else
 	echo "${BIOTRUMP_DIR}/ATLAS does not exist!"
 fi
