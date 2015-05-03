@@ -77,6 +77,69 @@ if [ -n "$2" ]; then
 fi
 
 echo MAKE_FLAGS=-j$((CORE_COUNT + 2)) > .tmp-config
+echo DEVICE_NAME=$1 >> .tmp-config
+
+case "$1" in
+"ubuntu-x86_64")
+	#64bit
+	echo TARGET_OS=ubuntu >> .tmp-config &&
+	echo TARGET_ARCH=x86_64 >> .tmp-config &&
+	repo_sync cv
+	;;
+
+"ubuntu-x86_32")
+	echo TARGET_OS=ubuntu >> .tmp-config &&
+	echo TARGET_ARCH=x86_32 >> .tmp-config &&
+	repo_sync cv
+	;;
+
+"NDK-arm")
+	#32bit
+	echo TARGET_OS=NDK >> .tmp-config &&
+	echo TARGET_ARCH=arm >> .tmp-config &&
+	repo_sync cv
+	;;
+
+"NDK-arm_64")
+	echo TARGET_OS=NDK >> .tmp-config &&
+	echo TARGET_ARCH=arm_64 >> .tmp-config &&
+	repo_sync cv
+	;;
+
+"NDK-x86_32")
+	echo TARGET_OS=NDK >> .tmp-config &&
+	echo TARGET_ARCH=x86_32 >> .tmp-config &&
+	repo_sync cv
+	;;
+
+"NDK-x86_64")
+	echo TARGET_OS=NDK >> .tmp-config &&
+	echo TARGET_ARCH=x86_64 >> .tmp-config &&
+	repo_sync cv
+	;;
+
+"NDK-mips")
+	echo TARGET_OS=NDK >> .tmp-config &&
+	echo TARGET_ARCH=mips >> .tmp-config &&
+	repo_sync cv
+	;;
+
+*)
+	echo "Usage: $0 [-cdflnq] (device name)"
+	echo "Flags are passed through to |./repo sync|."
+	echo
+	echo Valid devices to configure are:
+	echo - ubuntu-x86_64
+	echo - ubuntu-x86_32
+	echo - NDK-arm
+	echo - NDK-arm_64
+	echo - NDK-x86_32
+	echo - NDK-x86_64
+	echo - NDK-mips
+
+	exit -1
+	;;
+esac
 
 #############################################
 #biotrump cv Home
@@ -307,7 +370,6 @@ if [ -d ${CV_HOME}/rPPG ]; then
 	echo rPPG_DIR=${rPPG_DIR} >> .tmp-config
 	rPPG_OUT=${rPPG_OUT:-${CV_OUT}/rPPG}
 	echo rPPG_OUT=${rPPG_OUT} >> .tmp-config
-	echo rPPG_OUT=${rPPG_OUT}
 	if [ ! -d ${rPPG_OUT} ] ;then
 		mkdir ${rPPG_OUT}
 	fi
@@ -329,17 +391,12 @@ else
 	echo "${CV_HOME}/stasms does not exist!"
 fi
 #############################################
-#sync codes
-repo_sync cv
-if [ $? -ne 0 ]; then
-	echo Configuration failed
-	exit -1
-fi
 
 mv .tmp-config .config
-echo
-echo "*** config file is stored in ${PWD}/.config"
+echo "**********************************************************"
+echo "config file is stored in ${PWD}/.config"
+echo "**********************************************************"
 cat ${PWD}/.config
-
+echo "**********************************************************"
 echo Run \|./build.sh\| to start building
 echo "Or . setup.sh to export ENV before you build any specific project."
