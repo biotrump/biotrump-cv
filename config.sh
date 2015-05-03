@@ -124,7 +124,16 @@ case "$1" in
 	repo_sync cv
 	;;
 
+"NDK-all")
+	#build all targets under NDK
+	#echo TARGET_ARCH="arm arm_64 x86_32 x86_64 mips" >> .tmp-config &&
+	echo TARGET_OS=NDK >> .tmp-config &&
+	echo TARGET_ARCH="arm x86_32" >> .tmp-config &&
+	repo_sync cv
+	;;
+
 *)
+	echo ". setup.sh to export all ENVs for sub-projects after config.sh"
 	echo "Usage: $0 [-cdflnq] (device name)"
 	echo "Flags are passed through to |./repo sync|."
 	echo
@@ -136,6 +145,7 @@ case "$1" in
 	echo - NDK-x86_32
 	echo - NDK-x86_64
 	echo - NDK-mips
+	echo - "NDK-all(arm_32,arm_64,x86_32,x86_64,mips)"
 
 	exit -1
 	;;
@@ -152,12 +162,6 @@ echo BIOTRUMP_OUT=${BIOTRUMP_OUT} >> .tmp-config
 if [ ! -d ${BIOTRUMP_OUT} ]; then
 	mkdir ${BIOTRUMP_OUT}
 fi
-
-#############################################
-#ubuntu x86, android/NDK arm, x86
-#############################################
-#echo DEVICE_NAME=$1 >> .tmp-config
-#echo DEVICE=hammerhead >> .tmp-config &&
 
 #############################################
 #NDK and SDK
@@ -340,17 +344,6 @@ fi
 #############################################
 ###PICO
 #############################################
-#	if [ -f ${BIOTRUMP_DIR}/pico/runtime/pico-bin/C/CMakeLists.txt ]; then
-#		PICOBIN_DIR=${PICOBIN_DIR:-${BIOTRUMP_DIR}/pico/runtime/pico-bin/C}
-#		echo PICOBIN_DIR=${PICOBIN_DIR} >> .tmp-config
-#		PICOBIN_OUT=${PICOBIN_OUT:-${BIOTRUMP_OUT}/pico-bin}
-#		if [ ! -d ${PICOBIN_OUT} ]; then
-#			mkdir ${PICOBIN_OUT}
-#		fi
-#		echo PICOBIN_OUT=${PICOBIN_OUT} >> .tmp-config
-#	else
-#		echo "${BIOTRUMP_DIR}/pico/runtime/pico-bin/C/CMakeLists.txt does not exist!"
-#	fi
 if [ -d ${CV_HOME}/pico ]; then
 	PICO_DIR=${PICO_DIR:-${CV_HOME}/pico}
 	echo PICO_DIR=${PICO_DIR} >> .tmp-config
@@ -362,6 +355,20 @@ if [ -d ${CV_HOME}/pico ]; then
 else
 	echo "${CV_HOME}/pico does not exist!"
 fi
+#############################################
+###PICO-bin
+#############################################
+#	if [ -f ${BIOTRUMP_DIR}/pico/runtime/pico-bin/C/CMakeLists.txt ]; then
+#		PICOBIN_DIR=${PICOBIN_DIR:-${BIOTRUMP_DIR}/pico/runtime/pico-bin/C}
+#		echo PICOBIN_DIR=${PICOBIN_DIR} >> .tmp-config
+#		PICOBIN_OUT=${PICOBIN_OUT:-${BIOTRUMP_OUT}/pico-bin}
+#		if [ ! -d ${PICOBIN_OUT} ]; then
+#			mkdir ${PICOBIN_OUT}
+#		fi
+#		echo PICOBIN_OUT=${PICOBIN_OUT} >> .tmp-config
+#	else
+#		echo "${BIOTRUMP_DIR}/pico/runtime/pico-bin/C/CMakeLists.txt does not exist!"
+#	fi
 #############################################
 #rPPG
 #############################################
