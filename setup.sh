@@ -1,5 +1,5 @@
 #!/bin/bash
-
+#". setup.sh" to export all the necessary envs.
 . load-config.sh
 
 export	OPENCV_DIR &&
