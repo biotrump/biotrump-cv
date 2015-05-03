@@ -194,6 +194,9 @@ echo OPENCV_SRC=${OPENCV_SRC} >> .tmp-config
 OPENCV_BRANCH=${OPENCV_BRANCH:-2.4.x}
 echo OPENCV_BRANCH=${OPENCV_BRANCH} >> .tmp-config
 
+if [ ! -d ${BIOTRUMP_OUT}/openCV ]; then
+	mkdir ${BIOTRUMP_OUT}/openCV
+fi
 #static build
 OPENCV_BUILD_SHARED_LIBS=${OPENCV_BUILD_SHARED_LIBS:-OFF}
 echo OPENCV_BUILD_SHARED_LIBS=${OPENCV_BUILD_SHARED_LIBS} >> .tmp-config
@@ -203,6 +206,10 @@ if [ ${OPENCV_BUILD_SHARED_LIBS} = "OFF" ]; then
 else
 	OPENCV_OUT=${OPENCV_OUT:-${BIOTRUMP_OUT}/openCV/${OPENCV_BRANCH}-shared}
 fi
+if [ ! -d ${OPENCV_OUT} ]; then
+	mkdir ${OPENCV_OUT}
+fi
+
 echo OPENCV_OUT=${OPENCV_OUT} >> .tmp-config
 echo OPENCV_DIR=${OPENCV_OUT} >> .tmp-config
 
