@@ -16,11 +16,6 @@ if [ -f "$BIOTRUMP_DIR/.userconfig" ]; then
 	. "$BIOTRUMP_DIR/.userconfig"
 fi
 
-# Use default Gecko location if it's not provided in config files.
-#if [ -z $GECKO_PATH ]; then
-#  GECKO_PATH=$BIOTRUMP_DIR/gecko
-#fi
-
 VARIANT=${VARIANT:-eng}
 #PRODUCT_NAME=${PRODUCT_NAME:-full_${DEVICE}}
 #DEVICE=${DEVICE:-${PRODUCT_NAME}}

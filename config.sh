@@ -128,7 +128,7 @@ case "$1" in
 	#build all targets under NDK
 	#echo TARGET_ARCH="arm arm_64 x86_32 x86_64 mips" >> .tmp-config &&
 	echo TARGET_OS=NDK >> .tmp-config &&
-	echo TARGET_ARCH="arm x86_32" >> .tmp-config &&
+	echo TARGET_ARCH="\"arm x86_32\"" >> .tmp-config &&
 	repo_sync cv
 	;;
 
@@ -276,7 +276,7 @@ fi
 #############################################
 #blis
 #############################################
-if [ -d ${DSP_HOME}/ffts ]; then
+if [ -d ${DSP_HOME}/blis ]; then
 	BLIS_DIR=${BLIS_DIR:-${DSP_HOME}/blis}
 	echo BLIS_DIR=${BLIS_DIR} >> .tmp-config
 	BLIS_OUT=${BLIS_OUT:-${DSP_OUT}/blis}
