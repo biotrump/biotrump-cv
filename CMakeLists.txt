@@ -25,6 +25,7 @@ include(cmake/CVEnvImport.cmake)
 
 #set variable from shell's env var by $ENV{env_var}
 # ----------------------------------------------------------------------------
+# openCV for x86
 if(ANDROID_NDK)
 	#buld openCV, static
 #	add_custom_target ( opencv
@@ -35,6 +36,20 @@ else(ANDROID_NDK)
 	add_custom_target ( opencv
 		COMMAND bash ./opencv.sh
 		WORKING_DIRECTORY ${BCV_SOURCE_DIR}/openCV )
+endif(ANDROID_NDK)
+
+# ----------------------------------------------------------------------------
+# dsp
+if(ANDROID_NDK)
+	#buld dsp, static
+	add_custom_target ( dsp
+		COMMAND bash ./build_NDK_cmake.sh
+		WORKING_DIRECTORY ${BCV_SOURCE_DIR}/dsp )
+else(ANDROID_NDK)
+	#x86 ubuntu :
+	add_custom_target ( dsp
+		COMMAND bash ./build_linux_cmake.sh
+		WORKING_DIRECTORY ${BCV_SOURCE_DIR}/dsp )
 endif(ANDROID_NDK)
 
 # ----------------------------------------------------------------------------
@@ -50,15 +65,15 @@ if(0)
 	# ----------------------------------------------------------------------------
 	#opencv should be built first!
 	set(OpenCV_DIR $ENV{OPENCV_OUT})
-	message("++++OpenCV_DIR:""${OpenCV_DIR}")
+	message("++++OpenCV_DIR:${OpenCV_DIR}")
 	FIND_PACKAGE( OpenCV REQUIRED)
 	if(OpenCV_FOUND)
 		message("found")
-		message( "OpenCV_INCLUDE_DIRS:""${OpenCV_INCLUDE_DIRS}" )
-		message( "OpenCV_INCLUDES:""${OpenCV_INCLUDES}")
-		message( "OpenCV_LIBRARIES:""${OpenCV_LIBRARIES}")
-		message( "OpenCV_LIBS:""${OpenCV_LIBS}")
-		message( "OpenCV_DEFINITIONS:""${OpenCV_DEFINITIONS}")
+		message( "OpenCV_INCLUDE_DIRS:${OpenCV_INCLUDE_DIRS}" )
+		message( "OpenCV_INCLUDES:${OpenCV_INCLUDES}")
+		message( "OpenCV_LIBRARIES:${OpenCV_LIBRARIES}")
+		message( "OpenCV_LIBS:${OpenCV_LIBS}")
+		message( "OpenCV_DEFINITIONS:${OpenCV_DEFINITIONS}")
 	else()
 		message(FATAL_ERROR "openCV not foud")
 	endif()
@@ -69,6 +84,15 @@ endif(0)
 #add_subdirectory(v4l2/v4l2-lib ${V4L2_LIB_OUT})
 #add_subdirectory(v4l2/v4l-capture ${V4L2_CAPTURE_OUT})
 #add_subdirectory(dsp/ica)
-#add_subdirectory(v4l2/v4l2-lib)
+add_subdirectory(v4l2/v4l2-lib)
 #add_subdirectory(v4l2/v4l-capture)
-#add_subdirectory(pico)
+add_subdirectory(cv/rPPG)
+# --------------------------------------------------
+add_executable(dummy
+  dummy.c
+)
+
+add_dependencies(dummy
+				opencv
+				dsp
+				)
