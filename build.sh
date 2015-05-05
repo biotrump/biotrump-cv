@@ -225,8 +225,13 @@ function pico(){
 
 function build_opencv(){
 	pushd ${OPENCV_SRC}
+    if [ "$TARGET_OS" == "ubuntu" ]; then
 	. opencv.sh $MAKE_FLAGS $@
 	ret=$?
+	fi
+	if [ "$TARGET_OS" == "NDK" ]; then
+	echo "TODO"
+	fi
 	popd
 	return $ret
 }
@@ -243,23 +248,41 @@ function build_atlas(){
 	return $ret
 }
 
-function build_ffts(){
+function build_blis(){
+	pushd ${BLIS_DIR}
+	ret=0
 	if [ "$TARGET_OS" == "ubuntu" ]; then
-		pushd ${FFTS_DIR}
 		./build_x86.sh $MAKE_FLAGS $@
-		ret=$?
-		popd
 	fi
 	if [ "$TARGET_OS" == "NDK" ]; then
-		pushd ${FFTS_DIR}
 		if [ "$TARGET_ARCH" == "arm" ]; then
-			./buid_NDK.sh $TARGET_ARCH
+			./build_NDK.sh $TARGET_ARCH $MAKE_FLAGS $@
 		fi
 		if [ "$TARGET_ARCH" == "x86_64" ]; then
-			./buid_NDK.sh x86
+			./build_NDK.sh x86 $MAKE_FLAGS $@
 		fi
-		popd
 	fi
+	ret=$?
+	popd
+	return $ret
+}
+
+function build_ffts(){
+	ret=0
+	pushd ${FFTS_DIR}
+	if [ "$TARGET_OS" == "ubuntu" ]; then
+		./build_x86.sh $MAKE_FLAGS $@
+	fi
+	if [ "$TARGET_OS" == "NDK" ]; then
+		if [ "$TARGET_ARCH" == "arm" ]; then
+			./buid_NDK.sh $TARGET_ARCH $MAKE_FLAGS $@
+		fi
+		if [ "$TARGET_ARCH" == "x86_64" ]; then
+			./buid_NDK.sh x86 $MAKE_FLAGS $@
+		fi
+	fi
+	ret=$?
+	popd
 	return $ret
 }
 
@@ -268,6 +291,7 @@ function make-all(){
 	build_ffts $*
 	build_opencv $*
 	build_atlas $*
+	build_blis  $*
 	pushd ${BIOTRUMP_OUT}
 	cmake ${BIOTRUMP_DIR}
 	make $@
@@ -297,7 +321,7 @@ else
 			shift
 			build_opencv $*
 			;;
-			
+
 		"ATLAS")
 			echo "building ATLAS and lapack ..."
 			shift
@@ -310,6 +334,12 @@ else
 			build_ffts $*
 			;;
 
+		"blis")
+			echo "building blis only..."
+			shift
+			build_blis $*
+			;;
+
 		"v4l2")
 			###v4l2 lib
 			echo "buiding v4l2 library only..."
@@ -317,7 +347,7 @@ else
 			build_v4l2 $*
 
 			;;
-			
+
 		"lapack")
 			echo "building lapack only..."
 			shift
@@ -342,7 +372,8 @@ else
 			;;
 
 		*)
-			echo "unknown args: ./build.sh -j# target "
+			echo ""
+			echo "???? unknown args: ./build.sh -j# target "
 			;;
 		esac
 fi
