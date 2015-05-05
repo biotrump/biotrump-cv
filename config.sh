@@ -82,53 +82,69 @@ echo DEVICE_NAME=$1 >> .tmp-config
 case "$1" in
 "ubuntu-x86_64")
 	#64bit
-	echo TARGET_OS=ubuntu >> .tmp-config &&
-	echo TARGET_ARCH=x86_64 >> .tmp-config &&
+	export TARGET_OS=ubuntu &&
+	export TARGET_ARCH=x86_64 &&
+	echo TARGET_OS=${TARGET_OS} >> .tmp-config &&
+	echo TARGET_ARCH=${TARGET_ARCH} >> .tmp-config &&
 	repo_sync cv
 	;;
 
 "ubuntu-x86_32")
-	echo TARGET_OS=ubuntu >> .tmp-config &&
-	echo TARGET_ARCH=x86_32 >> .tmp-config &&
+	export TARGET_OS=ubuntu &&
+	export TARGET_ARCH=x86_32 &&
+	echo TARGET_OS=${TARGET_OS} >> .tmp-config &&
+	echo TARGET_ARCH=${TARGET_ARCH} >> .tmp-config &&
 	repo_sync cv
 	;;
 
 "NDK-arm")
 	#32bit
-	echo TARGET_OS=NDK >> .tmp-config &&
-	echo TARGET_ARCH=arm >> .tmp-config &&
+	export TARGET_OS=NDK &&
+	export TARGET_ARCH=arm &&
+	echo TARGET_OS=${TARGET_OS} >> .tmp-config &&
+	echo TARGET_ARCH=${TARGET_ARCH} >> .tmp-config &&
 	repo_sync cv
 	;;
 
 "NDK-arm_64")
-	echo TARGET_OS=NDK >> .tmp-config &&
-	echo TARGET_ARCH=arm_64 >> .tmp-config &&
+	export TARGET_OS=NDK &&
+	export TARGET_ARCH=arm_64 &&
+	echo TARGET_OS=${TARGET_OS} >> .tmp-config &&
+	echo TARGET_ARCH=${TARGET_ARCH} >> .tmp-config &&
 	repo_sync cv
 	;;
 
 "NDK-x86_32")
-	echo TARGET_OS=NDK >> .tmp-config &&
-	echo TARGET_ARCH=x86_32 >> .tmp-config &&
+	export TARGET_OS=NDK &&
+	export TARGET_ARCH=x86_32 &&
+	echo TARGET_OS=${TARGET_OS} >> .tmp-config &&
+	echo TARGET_ARCH=${TARGET_ARCH} >> .tmp-config &&
 	repo_sync cv
 	;;
 
 "NDK-x86_64")
-	echo TARGET_OS=NDK >> .tmp-config &&
-	echo TARGET_ARCH=x86_64 >> .tmp-config &&
+	export TARGET_OS=NDK &&
+	export TARGET_ARCH=x86_64 &&
+	echo TARGET_OS=${TARGET_OS} >> .tmp-config &&
+	echo TARGET_ARCH=${TARGET_ARCH} >> .tmp-config &&
 	repo_sync cv
 	;;
 
 "NDK-mips")
-	echo TARGET_OS=NDK >> .tmp-config &&
-	echo TARGET_ARCH=mips >> .tmp-config &&
+	export TARGET_OS=NDK &&
+	export TARGET_ARCH=mips &&
+	echo TARGET_OS=${TARGET_OS} >> .tmp-config &&
+	echo TARGET_ARCH=${TARGET_ARCH} >> .tmp-config &&
 	repo_sync cv
 	;;
 
 "NDK-all")
 	#build all targets under NDK
 	#echo TARGET_ARCH="arm arm_64 x86_32 x86_64 mips" >> .tmp-config &&
-	echo TARGET_OS=NDK >> .tmp-config &&
-	echo TARGET_ARCH="\"arm x86_32\"" >> .tmp-config &&
+	export TARGET_OS=NDK &&
+	export TARGET_ARCH="\"arm x86_32\"" &&
+	echo TARGET_OS=${TARGET_OS} >> .tmp-config &&
+	echo TARGET_ARCH=${TARGET_ARCH} >> .tmp-config &&
 	repo_sync cv
 	;;
 
@@ -168,6 +184,7 @@ fi
 #############################################
 if [ -d ${HOME}/NDK/android-ndk-r10d ]; then
 export NDK_ROOT=${HOME}/NDK/android-ndk-r10d
+echo NDK_ROOT=${NDK_ROOT} >> .tmp-config
 else
 echo "I can't find android-ndk-r10d under ${HOME}/NDK!"
 echo "Please export NDK_ROOT!!!"
@@ -177,6 +194,7 @@ fi
 #./toolchains/x86-4.8.0/prebuilt/linux-x86_64/bin/i686-linux-android-gfortran
 if [ -d ${HOME}/NDK/android-ndk-r9 ]; then
 export NDK_ROOT_FORTRAN=${HOME}/NDK/android-ndk-r9
+echo NDK_ROOT_FORTRAN=${NDK_ROOT_FORTRAN} >> .tmp-config 
 else
 echo "Please specify your gofortran NDK to NDK_ROOT_FORTRAN"
 fi
@@ -194,25 +212,20 @@ echo OPENCV_SRC=${OPENCV_SRC} >> .tmp-config
 OPENCV_BRANCH=${OPENCV_BRANCH:-2.4.x}
 echo OPENCV_BRANCH=${OPENCV_BRANCH} >> .tmp-config
 
-if [ ! -d ${BIOTRUMP_OUT}/openCV ]; then
-	mkdir -p ${BIOTRUMP_OUT}/openCV
-fi
 #static build
 OPENCV_BUILD_SHARED_LIBS=${OPENCV_BUILD_SHARED_LIBS:-OFF}
 echo OPENCV_BUILD_SHARED_LIBS=${OPENCV_BUILD_SHARED_LIBS} >> .tmp-config
 #build/output folder of openCV
 if [ ${OPENCV_BUILD_SHARED_LIBS} = "OFF" ]; then
-	OPENCV_OUT=${OPENCV_OUT:-${BIOTRUMP_OUT}/openCV/${OPENCV_BRANCH}-static}
+	OPENCV_OUT=${OPENCV_OUT:-${BIOTRUMP_OUT}/openCV/${OPENCV_BRANCH}-static/${TARGET_ARCH}}
 else
-	OPENCV_OUT=${OPENCV_OUT:-${BIOTRUMP_OUT}/openCV/${OPENCV_BRANCH}-shared}
+	OPENCV_OUT=${OPENCV_OUT:-${BIOTRUMP_OUT}/openCV/${OPENCV_BRANCH}-shared/${TARGET_ARCH}}
 fi
 if [ ! -d ${OPENCV_OUT} ]; then
 	mkdir -p ${OPENCV_OUT}
 fi
-
 echo OPENCV_OUT=${OPENCV_OUT} >> .tmp-config
 echo OPENCV_DIR=${OPENCV_OUT} >> .tmp-config
-
 #############################################
 #dsp
 #############################################

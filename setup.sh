@@ -39,4 +39,6 @@ export	PICO_OUT &&
 export	rPPG_DIR &&
 export	rPPG_OUT &&
 export	STASMS_DIR &&
-export	STASMS_OUT
+export	STASMS_OUT &&
+export	NDK_ROOT &&
+export NDK_ROOT_FORTRAN

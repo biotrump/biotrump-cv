@@ -16,7 +16,8 @@ function configure_device() {
     return $?
 }
 
-###openCV
+###cmake config
+###v4l2/v4l2-lib
 function cmake_opencv(){
 	if [ -f ${OPENCV_SRC}/CMakeLists.txt ]; then
 		if [ ! -d ${OPENCV_OUTT} ]; then
@@ -162,7 +163,7 @@ function cmake_config(){
 
 #### make targets
 ###v4l2/v4l2-lib
-function build_v4l2(){
+function v4l2_lib(){
 	ret=1
 #	echo *=$@
 #	read
@@ -223,53 +224,16 @@ function pico(){
 	return $ret
 }
 
-function build_opencv(){
-	pushd ${OPENCV_SRC}
-	. opencv.sh $MAKE_FLAGS $@
-	ret=$?
-	popd
-	return $ret
-}
-
-#ubuntu x86 only
-function build_atlas(){
-	if [ "$TARGET_OS" == "ubuntu" ]; then
-		pushd ${ATLAS_SRC}
-		./atlas_x86.sh config $MAKE_FLAGS $@
-		./atlas_x86.sh build $MAKE_FLAGS $@
-		ret=$?
-		popd
-	fi
-	return $ret
-}
-
-function build_ffts(){
-	if [ "$TARGET_OS" == "ubuntu" ]; then
-		pushd ${FFTS_DIR}
-		./build_x86.sh $MAKE_FLAGS $@
-		ret=$?
-		popd
-	fi
-	if [ "$TARGET_OS" == "NDK" ]; then
-		pushd ${FFTS_DIR}
-		if [ "$TARGET_ARCH" == "arm" ]; then
-			./buid_NDK.sh $TARGET_ARCH
-		fi
-		if [ "$TARGET_ARCH" == "x86_64" ]; then
-			./buid_NDK.sh x86
-		fi
-		popd
-	fi
-	return $ret
-}
-
 function make-all(){
-#openCV first
-	build_opencv $*
-	build_atlas $*
-	build_ffts $*
-	pushd ${BIOTRUMP_OUT}
-	cmake ${BIOTRUMP_DIR}
+#building base lib first!
+	v4l2_lib $*
+	ret=$?
+	echo -ne \\a
+	if [ $ret -ne 0 ]; then
+		echo "make error"
+	fi
+
+	cd ${BIOTRUMP_OUT}
 	make $@
 	ret=$?
 	echo -ne \\a
@@ -278,12 +242,52 @@ function make-all(){
 		return $ret
 	fi
 	return 0
+
+	### v4l2/v4l-capture
+	v4l2_capture $*
+	ret=$?
+	echo -ne \\a
+	if [ $ret -ne 0 ]; then
+		echo "make error"
+	fi
+
+	###PICO face detection
+	pico $*
+	ret=$?
+	echo -ne \\a
+	if [ $ret -ne 0 ]; then
+		echo "make error"
+	fi
+
+	pico_bin $*
+	ret=$?
+	echo -ne \\a
+	if [ $ret -ne 0 ]; then
+		echo "make error"
+	fi
 }
 
 ret=1
 . setup.sh
 export
 if [[ "$#" -eq 0 || "$#" -eq 1 && "$1" == "-j"* ]]; then
+#	echo "###: $#, $1"
+	#"." or "source" to run a script: the script will run in the same process space of the shell.
+	#. $ATLAS_SRC/build.sh  $MAKE_FLAGS $@ &&
+	if [ ! -d ${ATLAS_OUT} ]; then
+		echo ${ATLAS_OUT} does not exist...
+		exit -1
+	fi &&
+	pushd ${ATLAS_OUT} &&
+	. ${ATLAS_SRC}/atlas.sh build $MAKE_FLAGS $@ &&
+	popd &&
+	. lapack.sh $MAKE_FLAGS $@ &&
+	. ffts.sh $MAKE_FLAGS $@ &&
+	. opencv.sh $MAKE_FLAGS $@ &&
+	#if [ -f patches/patch.sh ] ; then
+	#    . patches/patch.sh
+	#fi &&
+	cmake_config &&
 	time make-all $MAKE_FLAGS $@
 	#time nice -n19 make-all $MAKE_FLAGS $@
 else
@@ -295,34 +299,51 @@ else
 		"openCV")
 			echo "building openCV only..."
 			shift
-			build_opencv $*
+			. opencv.sh $MAKE_FLAGS $@
+			ret=$?
 			;;
-			
+
+		"lapack")
+			echo "building lapack only..."
+			shift
+			. lapack.sh $MAKE_FLAGS $@
+			ret=$?
+			;;
+
 		"ATLAS")
 			echo "building ATLAS and lapack ..."
 			shift
-			build_atlas $*
+			if [ ! -d ${ATLAS_OUT} ]; then
+				echo ${ATLAS_OUT} does not exist...
+				exit -1
+			fi
+			pushd ${ATLAS_OUT}
+			. ${ATLAS_SRC}/atlas.sh build $MAKE_FLAGS $@
+			ret=$?
+			popd
 			;;
 
 		"ffts")
 			echo "building ffts only..."
 			shift
-			build_ffts $*
+			. ffts.sh $MAKE_FLAGS $@
+			ret=$?
 			;;
 
 		"v4l2")
 			###v4l2 lib
 			echo "buiding v4l2 library only..."
 			shift
-			build_v4l2 $*
-
-			;;
-			
-		"lapack")
-			echo "building lapack only..."
-			shift
-			. lapack.sh $MAKE_FLAGS $@
-			ret=$?
+			#cmake has prepared the make!
+			if [ -f ${V4L2_LIB_OUT}/Makefile ]; then
+				pushd ${V4L2_LIB_OUT}
+				time make $@
+				ret=$?
+				popd
+			else
+				echo ${V4L2_LIB_OUT}/Makefile does not exists.
+				echo please \"./build.sh\" first
+			fi
 			;;
 
 		"pico")

@@ -76,10 +76,21 @@ if(ANDROID_NDK)
 #		COMMAND bash ./cmake_android_arm.sh
 #		WORKING_DIRECTORY ${BCV_SOURCE_DIR}/openCV )
 else(ANDROID_NDK)
-	#x86 ubuntu : buld openCV, static
-	add_custom_target ( opencv
-		COMMAND bash ./opencv.sh ${MAKE_FLAGS}
-		WORKING_DIRECTORY ${BCV_SOURCE_DIR}/openCV )
+	message("++++OPENCV_OUT:${OPENCV_OUT}")
+	message("++++OpenCV_FOUND:${OpenCV_FOUND}")
+	message("++++OpenCV_DIR:${OpenCV_DIR}")
+	FIND_PACKAGE( OpenCV REQUIRED)
+	if(OpenCV_FOUND)
+		message("found")
+		message( "OpenCV_INCLUDE_DIRS:${OpenCV_INCLUDE_DIRS}" )
+		message( "OpenCV_INCLUDES:${OpenCV_INCLUDES}")
+		message( "OpenCV_LIBRARIES:${OpenCV_LIBRARIES}")
+		message( "OpenCV_LIBS:${OpenCV_LIBS}")
+		message( "OpenCV_DEFINITIONS:${OpenCV_DEFINITIONS}")
+	else(OpenCV_FOUND)
+		message(FATAL_ERROR "openCV not foud")
+	endif(OpenCV_FOUND)
+
 endif(ANDROID_NDK)
 
 # ----------------------------------------------------------------------------
@@ -142,7 +153,6 @@ else(ANDROID_NDK)
 	)
 	#opencv should be built first before all projects are built.
 	add_dependencies(dummy
-					opencv
 					rPPG
 	#				dsp
 					)
