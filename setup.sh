@@ -15,6 +15,8 @@ export 	OPENCV_BRANCH &&
 export 	OPENCV_BUILD_SHARED_LIBS &&
 export	DSP_HOME &&
 export	DSP_OUT &&
+export	DSPLIB_DIR &&
+export	DSPLIB_OUT &&
 export	FFTS_DIR &&
 export	FFTS_OUT &&
 export	BLIS_DIR &&

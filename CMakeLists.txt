@@ -20,10 +20,9 @@ set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${BCV_BINARY_DIR}/bin)
 set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY ${BCV_BINARY_DIR}/lib)
 set(CMAKE_LIBRARY_OUTPUT_DIRECTORY ${BCV_BINARY_DIR}/lib)
 # --------------------------------------------------
-
+#export ENVs to cmake subproejcts
 include(cmake/CVEnvImport.cmake)
-
-set(MAKE_FLAGS $ENV{MAKE_FLAGS})
+set(BCV_ENV_EXPORTED "1")
 
 # ----------------------------------------------------------------------------
 #openMP to avoid link error : omp_xxx error!
@@ -89,9 +88,12 @@ endif(0)
 #add_subdirectory(v4l2/v4l2-lib ${V4L2_LIB_OUT})
 #add_subdirectory(v4l2/v4l-capture ${V4L2_CAPTURE_OUT})
 #add_subdirectory(dsp/ica)
-
-if(NOT "$ENV{V4L2_LIB_DIR}" STREQUAL "")
-set(V4L2_LIB_DIR $ENV{V4L2_LIB_DIR} )
+# ----------------------------------------------------------------------------
+#v4l2/v4l2-lib
+# ----------------------------------------------------------------------------
+if("${V4L2_LIB_DIR}" STREQUAL "")
+	set(V4L2_LIB_DIR ${BCV_SOURCE_DIR}/v4l2/v4l2-lib )
+endif()
 message( "V4L2_LIB_DIR=${V4L2_LIB_DIR}" )
 find_path(V4L2_INC capture-v4l2.h
 			HINTS "${V4L2_LIB_DIR}" )
@@ -100,15 +102,38 @@ if(V4L2_INC)
 	add_subdirectory(v4l2/v4l2-lib)
 	include_directories("${V4L2_INC}")
 endif(V4L2_INC)
-endif(NOT "$ENV{V4L2_LIB_DIR}" STREQUAL "")
+# ----------------------------------------------------------------------------
+#cv/pico
+# ----------------------------------------------------------------------------
+if("${PICO_DIR}" STREQUAL "")
+	set(PICO_DIR ${BCV_SOURCE_DIR}/cv/pico )
+endif()
+message( "PICO_DIR=${PICO_DIR}" )
+find_path(PICO_INC picornt.h
+			HINTS "${PICO_DIR}/rnt" )
+message( "PICO_INC=${PICO_INC}" )
+if(PICO_INC)
+
+	add_subdirectory(cv/pico)
+	include_directories("${PICO_INC}")
+endif(PICO_INC)
+
 #add_subdirectory(v4l2/v4l-capture)
 #add_subdirectory(cv/rPPG)
 # --------------------------------------------------
-add_executable(dummy
-  dummy.c
-)
+if(ANDROID_NDK)
+	add_executable(dummy
+		dummy.c
+	)
+else(ANDROID_NDK)
 
-add_dependencies(dummy
-				opencv
-#				dsp
-				)
+	add_executable(dummy
+		dummy.c
+	)
+
+	#opencv should be built first before all projects are built.
+	add_dependencies(dummy
+					opencv
+	#				dsp
+					)
+endif(ANDROID_NDK)

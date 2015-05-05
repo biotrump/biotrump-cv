@@ -160,7 +160,7 @@ echo BIOTRUMP_DIR=${BIOTRUMP_DIR} >> .tmp-config
 BIOTRUMP_OUT=${BIOTRUMP_OUT:-$BIOTRUMP_DIR/out}
 echo BIOTRUMP_OUT=${BIOTRUMP_OUT} >> .tmp-config
 if [ ! -d ${BIOTRUMP_OUT} ]; then
-	mkdir ${BIOTRUMP_OUT}
+	mkdir -p ${BIOTRUMP_OUT}
 fi
 
 #############################################
@@ -195,7 +195,7 @@ OPENCV_BRANCH=${OPENCV_BRANCH:-2.4.x}
 echo OPENCV_BRANCH=${OPENCV_BRANCH} >> .tmp-config
 
 if [ ! -d ${BIOTRUMP_OUT}/openCV ]; then
-	mkdir ${BIOTRUMP_OUT}/openCV
+	mkdir -p ${BIOTRUMP_OUT}/openCV
 fi
 #static build
 OPENCV_BUILD_SHARED_LIBS=${OPENCV_BUILD_SHARED_LIBS:-OFF}
@@ -207,7 +207,7 @@ else
 	OPENCV_OUT=${OPENCV_OUT:-${BIOTRUMP_OUT}/openCV/${OPENCV_BRANCH}-shared}
 fi
 if [ ! -d ${OPENCV_OUT} ]; then
-	mkdir ${OPENCV_OUT}
+	mkdir -p ${OPENCV_OUT}
 fi
 
 echo OPENCV_OUT=${OPENCV_OUT} >> .tmp-config
@@ -222,7 +222,7 @@ if [ -d ${BIOTRUMP_DIR}/dsp ]; then
 	DSP_OUT=${DSP_OUT:-${BIOTRUMP_OUT}/dsp}
 	echo DSP_OUT=${DSP_OUT} >> .tmp-config
 	if [ ! -d ${DSP_OUT} ] ;then
-		mkdir ${DSP_OUT}
+		mkdir -p ${DSP_OUT}
 	fi
 else
 	echo "${BIOTRUMP_DIR}/dsp does not exist! quit"
@@ -240,7 +240,7 @@ if [ -d ${DSP_HOME}/ATLAS ]; then
 	ATLAS_OUT=${ATLAS_OUT:-${DSP_OUT}/ATLAS}
 	echo ATLAS_OUT=${ATLAS_OUT} >> .tmp-config
 	if [ ! -d ${ATLAS_OUT} ]; then
-		mkdir ${ATLAS_OUT}
+		mkdir -p ${ATLAS_OUT}
 	fi
 else
 	echo "${DSP_HOME}/ATLAS does not exist!"
@@ -254,7 +254,7 @@ if [ -d ${DSP_HOME}/LAPACK ]; then
 	LAPACK_OUT=${LAPACK_OUT:-${DSP_OUT}/LAPACK}
 	echo LAPACK_OUT=${LAPACK_OUT} >> .tmp-config
 	if [ ! -d ${LAPACK_OUT} ]; then
-		mkdir ${LAPACK_OUT}
+		mkdir -p ${LAPACK_OUT}
 	fi
 else
 	echo "${DSP_HOME}/LAPACK does not exist!"
@@ -268,7 +268,7 @@ if [ -d ${DSP_HOME}/ffts ]; then
 	FFTS_OUT=${FFTS_OUT:-${DSP_OUT}/ffts}
 	echo FFTS_OUT=${FFTS_OUT} >> .tmp-config
 	if [ ! -d ${FFTS_OUT} ]; then
-		mkdir ${FFTS_OUT}
+		mkdir -p ${FFTS_OUT}
 	fi
 else
 	echo "${DSP_HOME}/ffts does not exist!"
@@ -282,10 +282,24 @@ if [ -d ${DSP_HOME}/blis ]; then
 	BLIS_OUT=${BLIS_OUT:-${DSP_OUT}/blis}
 	echo BLIS_OUT=${BLIS_OUT} >> .tmp-config
 	if [ ! -d ${BLIS_OUT} ]; then
-		mkdir ${BLIS_OUT}
+		mkdir -p ${BLIS_OUT}
 	fi
 else
 	echo "${DSP_HOME}/blis does not exist!"
+fi
+#############################################
+#dsp/lib
+#############################################
+if [ -d ${DSP_HOME}/lib ]; then
+	DSPLIB_DIR=${DSPLIB_DIR:-${DSP_HOME}/lib}
+	echo DSPLIB_DIR=${DSPLIB_DIR} >> .tmp-config
+	DSPLIB_OUT=${DSPLIB_OUT:-${DSP_OUT}/lib}
+	echo DSPLIB_OUT=${DSPLIB_OUT} >> .tmp-config
+	if [ ! -d ${DSPLIB_OUT} ]; then
+		mkdir -p ${DSPLIB_OUT}
+	fi
+else
+	echo "${DSP_HOME}/lib does not exist!"
 fi
 #############################################
 #v4l2
@@ -296,7 +310,7 @@ if [ -d ${BIOTRUMP_DIR}/v4l2 ]; then
 	V4L2_OUT=${V4L2_OUT:-${BIOTRUMP_OUT}/v4l2}
 	echo V4L2_OUT=${V4L2_OUT} >> .tmp-config
 	if [ ! -d ${V4L2_OUT} ] ;then
-		mkdir ${V4L2_OUT}
+		mkdir -p ${V4L2_OUT}
 	fi
 else
 	echo "${BIOTRUMP_DIR}/v4l2 does not exist! quit"
@@ -311,7 +325,7 @@ if [ -d ${V4L2_HOME}/v4l2-lib ]; then
 	V4L2_LIB_OUT=${V4L2_LIB_OUT:-${V4L2_OUT}/v4l2-lib}
 	echo V4L2_LIB_OUT=${V4L2_LIB_OUT} >> .tmp-config
 	if [ ! -d ${V4L2_LIB_OUT} ] ;then
-		mkdir ${V4L2_LIB_OUT}
+		mkdir -p ${V4L2_LIB_OUT}
 	fi
 else
 	echo "${BIOTRUMP_DIR}/v4l2/v4l2-lib/CMakeLists.txt does not exist!"
@@ -342,7 +356,7 @@ if [ -d ${BIOTRUMP_DIR}/cv ]; then
 	CV_OUT=${CV_OUT:-${BIOTRUMP_OUT}/cv}
 	echo CV_OUT=${CV_OUT} >> .tmp-config
 	if [ ! -d ${CV_OUT} ] ;then
-		mkdir ${CV_OUT}
+		mkdir -p ${CV_OUT}
 	fi
 else
 	echo "${BIOTRUMP_DIR}/cv does not exist! quit"
@@ -357,7 +371,7 @@ if [ -d ${CV_HOME}/pico ]; then
 	PICO_OUT=${PICO_OUT:-${CV_OUT}/pico}
 	echo PICO_OUT=${PICO_OUT} >> .tmp-config
 	if [ ! -d ${PICO_OUT} ] ;then
-		mkdir ${PICO_OUT}
+		mkdir -p ${PICO_OUT}
 	fi
 else
 	echo "${CV_HOME}/pico does not exist!"
@@ -385,7 +399,7 @@ if [ -d ${CV_HOME}/rPPG ]; then
 	rPPG_OUT=${rPPG_OUT:-${CV_OUT}/rPPG}
 	echo rPPG_OUT=${rPPG_OUT} >> .tmp-config
 	if [ ! -d ${rPPG_OUT} ] ;then
-		mkdir ${rPPG_OUT}
+		mkdir -p ${rPPG_OUT}
 	fi
 else
 	echo "${CV_HOME}/rPPG does not exist!"
@@ -399,7 +413,7 @@ if [ -d ${CV_HOME}/stasms ]; then
 	STASMS_OUT=${STASMS_OUT:-${CV_OUT}/stasms}
 	echo STASMS_OUT=${STASMS_OUT} >> .tmp-config
 	if [ ! -d ${STASMS_OUT} ] ;then
-		mkdir ${STASMS_OUT}
+		mkdir -p ${STASMS_OUT}
 	fi
 else
 	echo "${CV_HOME}/stasms does not exist!"
@@ -413,4 +427,4 @@ echo "**********************************************************"
 cat ${PWD}/.config
 echo "**********************************************************"
 echo Run \|./build.sh\| to start building
-echo "Or . setup.sh to export ENV before you build any specific project."
+echo "Or \". setup.sh\" to export ENV before you build any specific project."
