@@ -26,7 +26,6 @@ export	LAPACK_OUT &&
 export	ATLAS_SRC &&
 export	ATLAS_OUT &&
 export	ATLAS_BRANCH &&
-export	FFTS_LIB_DIR &&
 export	V4L2_HOME &&
 export	V4L2_OUT &&
 export	V4L2_LIB_DIR &&
