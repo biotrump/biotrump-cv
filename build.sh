@@ -265,9 +265,9 @@ function build_ffts(){
 
 function make-all(){
 #openCV first
+	build_ffts $*
 	build_opencv $*
 	build_atlas $*
-	build_ffts $*
 	pushd ${BIOTRUMP_OUT}
 	cmake ${BIOTRUMP_DIR}
 	make $@
