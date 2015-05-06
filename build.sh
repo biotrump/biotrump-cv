@@ -270,6 +270,44 @@ function build_blis(){
 	return $ret
 }
 
+function build_lapack(){
+	pushd ${LAPACK_SRC}
+	ret=0
+	if [ "$TARGET_OS" == "ubuntu" ]; then
+		./build_x86.sh $MAKE_FLAGS $@
+	fi
+	if [ "$TARGET_OS" == "NDK" ]; then
+		if [ "$TARGET_ARCH" == "arm" ]; then
+			./build_NDK_cmake.sh $TARGET_ARCH $MAKE_FLAGS $@
+		fi
+		if [ "$TARGET_ARCH" == "x86_64" ]; then
+			./build_NDK_cmake.sh x86 $MAKE_FLAGS $@
+		fi
+	fi
+	ret=$?
+	popd
+	return $ret
+}
+
+function build_dsplib(){
+	pushd ${LAPACK_SRC}
+	ret=0
+	if [ "$TARGET_OS" == "ubuntu" ]; then
+		./build_x86.sh $MAKE_FLAGS $@
+	fi
+	if [ "$TARGET_OS" == "NDK" ]; then
+		if [ "$TARGET_ARCH" == "arm" ]; then
+			./build_NDK_cmake.sh $TARGET_ARCH $MAKE_FLAGS $@
+		fi
+		if [ "$TARGET_ARCH" == "x86_64" ]; then
+			./build_NDK_cmake.sh x86 $MAKE_FLAGS $@
+		fi
+	fi
+	ret=$?
+	popd
+	return $ret
+}
+
 function build_ffts(){
 	ret=0
 	pushd ${FFTS_DIR}
@@ -278,10 +316,10 @@ function build_ffts(){
 	fi
 	if [ "$TARGET_OS" == "NDK" ]; then
 		if [ "$TARGET_ARCH" == "arm" ]; then
-			./buid_NDK.sh $TARGET_ARCH $MAKE_FLAGS $@
+			./build_NDK.sh $TARGET_ARCH $MAKE_FLAGS $@
 		fi
 		if [ "$TARGET_ARCH" == "x86_64" ]; then
-			./buid_NDK.sh x86 $MAKE_FLAGS $@
+			./build_NDK.sh x86 $MAKE_FLAGS $@
 		fi
 	fi
 	ret=$?
@@ -291,6 +329,7 @@ function build_ffts(){
 
 function make-all(){
 #openCV first
+if [ "$TARGET_OS" == "ubuntu" ]; then
 	build_ffts $*
 	build_opencv $*
 	build_atlas $*
@@ -302,17 +341,19 @@ function make-all(){
 		make $@
 		ret=$?
 	fi
-	if [ "$TARGET_OS" == "NDK" ]; then
-		cmake -DANDROID_NDK=${NDK_ROOT} ${BIOTRUMP_DIR}
-		make $@
-		#./build_NDK_cmake.sh $@
-		ret=$?
-	fi
 	echo -ne \\a
 	if [ $ret -ne 0 ]; then
 		echo "top build make error"
 		return $ret
 	fi
+fi
+if [ "$TARGET_OS" == "NDK" ]; then
+	build_ffts $*
+	build_opencv $*
+	build_blis  $*
+	build_lapack $*
+	ret=$?
+fi
 	return 0
 }
 
@@ -363,7 +404,8 @@ else
 		"lapack")
 			echo "building lapack only..."
 			shift
-			. lapack.sh $MAKE_FLAGS $@
+			build_lapack $*
+			#. lapack.sh $MAKE_FLAGS $@
 			ret=$?
 			;;
 
