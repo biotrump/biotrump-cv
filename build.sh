@@ -297,9 +297,17 @@ function make-all(){
 	build_blis  $*
 	echo "cmake ...."
 	pushd ${BIOTRUMP_OUT}
-	cmake ${BIOTRUMP_DIR}
-	make $@
-	ret=$?
+	if [ "$TARGET_OS" == "ubuntu" ]; then
+		cmake ${BIOTRUMP_DIR}
+		make $@
+		ret=$?
+	fi
+	if [ "$TARGET_OS" == "NDK" ]; then
+		cmake -DANDROID_NDK=${NDK_ROOT} ${BIOTRUMP_DIR}
+		make $@
+		#./build_NDK_cmake.sh $@
+		ret=$?
+	fi
 	echo -ne \\a
 	if [ $ret -ne 0 ]; then
 		echo "top build make error"

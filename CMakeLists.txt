@@ -35,7 +35,7 @@ if( NOT ANDROID_NDK)
 		set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} ${OpenMP_C_FLAGS}")
 		set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} ${OpenMP_CXX_FLAGS}")
 	endif()
-endif(ANDROID_NDK)
+endif(NOT ANDROID_NDK)
 
 # --------------------------------------------------
 # Make a target to generate the documentation.  If Doxygen isn't installed, then
