@@ -194,7 +194,7 @@ fi
 #./toolchains/x86-4.8.0/prebuilt/linux-x86_64/bin/i686-linux-android-gfortran
 if [ -d ${HOME}/NDK/android-ndk-r9 ]; then
 export NDK_ROOT_FORTRAN=${HOME}/NDK/android-ndk-r9
-echo NDK_ROOT_FORTRAN=${NDK_ROOT_FORTRAN} >> .tmp-config 
+echo NDK_ROOT_FORTRAN=${NDK_ROOT_FORTRAN} >> .tmp-config
 else
 echo "Please specify your gofortran NDK to NDK_ROOT_FORTRAN"
 fi
@@ -225,7 +225,7 @@ if [ ! -d ${OPENCV_OUT} ]; then
 	mkdir -p ${OPENCV_OUT}
 fi
 echo OPENCV_OUT=${OPENCV_OUT} >> .tmp-config
-echo OPENCV_DIR=${OPENCV_OUT} >> .tmp-config
+#echo OPENCV_DIR=${OPENCV_OUT} >> .tmp-config
 #############################################
 #dsp
 #############################################

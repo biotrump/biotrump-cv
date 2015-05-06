@@ -292,6 +292,7 @@ function make-all(){
 	build_opencv $*
 	build_atlas $*
 	build_blis  $*
+	echo "\ncmake ...."
 	pushd ${BIOTRUMP_OUT}
 	cmake ${BIOTRUMP_DIR}
 	make $@

@@ -1,5 +1,6 @@
 #!/bin/bash
 #". setup.sh" to export all the necessary envs.
+#export	OPENCV_DIR &&
 . load-config.sh
 
 export	MAKE_FLAGS &&
@@ -10,7 +11,6 @@ export	BIOTRUMP_DIR &&
 export	BIOTRUMP_OUT &&
 export 	OPENCV_SRC &&
 export 	OPENCV_OUT &&
-export	OPENCV_DIR &&
 export 	OPENCV_BRANCH &&
 export 	OPENCV_BUILD_SHARED_LIBS &&
 export	DSP_HOME &&
@@ -41,4 +41,4 @@ export	rPPG_OUT &&
 export	STASMS_DIR &&
 export	STASMS_OUT &&
 export	NDK_ROOT &&
-export NDK_ROOT_FORTRAN
+export 	NDK_ROOT_FORTRAN

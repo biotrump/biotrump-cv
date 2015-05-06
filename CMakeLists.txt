@@ -79,6 +79,7 @@ else(ANDROID_NDK)
 	message("++++OPENCV_OUT:${OPENCV_OUT}")
 	message("++++OpenCV_FOUND:${OpenCV_FOUND}")
 	message("++++OpenCV_DIR:${OpenCV_DIR}")
+	set(OpenCV_DIR ${OPENCV_OUT})
 	FIND_PACKAGE( OpenCV REQUIRED)
 	if(OpenCV_FOUND)
 		message("found")
@@ -90,7 +91,6 @@ else(ANDROID_NDK)
 	else(OpenCV_FOUND)
 		message(FATAL_ERROR "openCV not foud")
 	endif(OpenCV_FOUND)
-
 endif(ANDROID_NDK)
 
 # ----------------------------------------------------------------------------
