@@ -29,20 +29,22 @@ set(BCV_ENV_EXPORTED "1")
 #openMP to avoid link error : omp_xxx error!
 # undefined reference to `GOMP_loop_dynamic_start
 #pass the OPENMP_FOUND to subfolders
-find_package(OpenMP)
-if(OPENMP_FOUND)
-	set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} ${OpenMP_C_FLAGS}")
-	set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} ${OpenMP_CXX_FLAGS}")
-endif()
+if( NOT ANDROID_NDK)
+	find_package(OpenMP)
+	if(OPENMP_FOUND)
+		set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} ${OpenMP_C_FLAGS}")
+		set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} ${OpenMP_CXX_FLAGS}")
+	endif()
+endif(ANDROID_NDK)
 
 # --------------------------------------------------
 # Make a target to generate the documentation.  If Doxygen isn't installed, then
 # I guess this option will just be unavailable.
 find_package(Doxygen)
 
-if(ANDROID_NDK)
-find_host_package(Doxygen)
-endif(ANDROID_NDK)
+#if(ANDROID_NDK)
+#find_host_package(Doxygen)
+#endif(ANDROID_NDK)
 
 if (DOXYGEN_FOUND)
   # Preprocess the Doxyfile.  This is done before 'make doc'.

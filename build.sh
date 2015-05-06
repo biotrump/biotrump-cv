@@ -245,6 +245,9 @@ function build_atlas(){
 		ret=$?
 		popd
 	fi
+	if [ "$TARGET_OS" == "NDK" ]; then
+		echo "ATLAS is not supported in NDK yet"
+	fi
 	return $ret
 }
 
@@ -292,7 +295,7 @@ function make-all(){
 	build_opencv $*
 	build_atlas $*
 	build_blis  $*
-	echo "\ncmake ...."
+	echo "cmake ...."
 	pushd ${BIOTRUMP_OUT}
 	cmake ${BIOTRUMP_DIR}
 	make $@
