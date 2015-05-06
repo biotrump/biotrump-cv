@@ -290,10 +290,10 @@ function build_lapack(){
 }
 
 function build_dsplib(){
-	pushd ${LAPACK_SRC}
+	pushd ${DSPLIB_DIR}
 	ret=0
 	if [ "$TARGET_OS" == "ubuntu" ]; then
-		./build_x86.sh $MAKE_FLAGS $@
+		./build_x86_cmake.sh $MAKE_FLAGS $@
 	fi
 	if [ "$TARGET_OS" == "NDK" ]; then
 		if [ "$TARGET_ARCH" == "arm" ]; then
@@ -352,6 +352,7 @@ if [ "$TARGET_OS" == "NDK" ]; then
 	build_opencv $*
 	build_blis  $*
 	build_lapack $*
+	build_dsplib $*
 	ret=$?
 fi
 	return 0
@@ -423,6 +424,13 @@ else
 				echo ${PICO_OUT}/Makefile does not exists.
 				echo please \"./build.sh\" first
 			fi
+			;;
+
+		"dsplib")
+			echo "building dsplib only..."
+			shift
+			build_dsplib $*
+			ret=$?
 			;;
 
 		*)
