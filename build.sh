@@ -208,18 +208,22 @@ function pico_bin(){
 	return $ret
 }
 
-function pico(){
-	ret=1
-#	echo *=$@
-#	read
-	if [ -d ${PICO_OUT} ]; then
-		cd ${PICO_OUT}
-		make $@
-		ret=$?
-	else
-		echo "${PICO_OUT} does not exist"
+function build_picort-lib(){
+	pushd ${PICO_DIR}/rnt/sample
+	ret=0
+#	if [ "$TARGET_OS" == "ubuntu" ]; then
+#		./build_x86_cmake.sh $TARGET_ARCH $@
+#	fi
+	if [ "$TARGET_OS" == "NDK" ]; then
+		if [ "$TARGET_ARCH" == "arm" ]; then
+			./build_NDK_cmake.sh $TARGET_ARCH $@
+		fi
+		if [ "$TARGET_ARCH" == "x86_64" ]; then
+			./build_NDK_cmake.sh x86 $MAKE_FLAGS $@
+		fi
 	fi
-	cd ${BIOTRUMP_DIR}
+	ret=$?
+	popd
 	return $ret
 }
 
@@ -368,6 +372,7 @@ if [ "$TARGET_OS" == "ubuntu" ]; then
 	fi
 fi
 if [ "$TARGET_OS" == "NDK" ]; then
+	build_picort-lib $*
 	build_ffts $*
 	build_opencv $*
 	build_blis  $*
@@ -400,6 +405,12 @@ else
 			echo "building ATLAS and lapack ..."
 			shift
 			build_atlas $*
+			;;
+
+		"picort-lib")
+			echo "building picort-lib only..."
+			shift
+			build_picort-lib $*
 			;;
 
 		"ffts")
