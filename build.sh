@@ -327,6 +327,25 @@ function build_ffts(){
 	return $ret
 }
 
+function build_rppg(){
+	ret=0
+	pushd ${rPPG_DIR}
+	if [ "$TARGET_OS" == "ubuntu" ]; then
+		./build_x86_cmake.sh $MAKE_FLAGS $@
+	fi
+#	if [ "$TARGET_OS" == "NDK" ]; then
+#		if [ "$TARGET_ARCH" == "arm" ]; then
+#			./buid_NDK.sh $TARGET_ARCH $MAKE_FLAGS $@
+#		fi
+#		if [ "$TARGET_ARCH" == "x86_64" ]; then
+#			./buid_NDK.sh x86 $MAKE_FLAGS $@
+#		fi
+#	fi
+	ret=$?
+	popd
+	return $ret
+}
+
 function make-all(){
 #openCV first
 if [ "$TARGET_OS" == "ubuntu" ]; then
@@ -334,6 +353,7 @@ if [ "$TARGET_OS" == "ubuntu" ]; then
 	build_opencv $*
 	build_atlas $*
 	build_blis  $*
+	build_rppg $*
 	echo "cmake ...."
 	pushd ${BIOTRUMP_OUT}
 	if [ "$TARGET_OS" == "ubuntu" ]; then
@@ -430,6 +450,13 @@ else
 			echo "building dsplib only..."
 			shift
 			build_dsplib $*
+			ret=$?
+			;;
+
+		"rPPG")
+			echo "building rPPG only..."
+			shift
+			build_rppg $*
 			ret=$?
 			;;
 
