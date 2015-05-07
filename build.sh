@@ -308,6 +308,10 @@ function build_dsplib(){
 		fi
 	fi
 	ret=$?
+	echo "***************************"
+	echo "$DSPLIB_OUT/lib:"
+	ls -l $DSPLIB_OUT/lib
+	echo "***************************"
 	popd
 	return $ret
 }
