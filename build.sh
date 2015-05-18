@@ -215,14 +215,21 @@ function build_picort-lib(){
 #		./build_x86_cmake.sh $TARGET_ARCH $@
 #	fi
 	if [ "$TARGET_OS" == "NDK" ]; then
-		if [ "$TARGET_ARCH" == "arm" ]; then
-			./build_NDK_cmake.sh $TARGET_ARCH $@
-		fi
-		if [ "$TARGET_ARCH" == "x86_64" ]; then
-			./build_NDK_cmake.sh x86 $MAKE_FLAGS $@
-		fi
+		./NDK_all.sh $@
+#		if [ "$TARGET_ARCH" == "arm" ]; then
+#			./build_NDK_cmake.sh $TARGET_ARCH $@
+#		fi
+#		if [ "$TARGET_ARCH" == "x86_64" ]; then
+#			./build_NDK_cmake.sh x86 $MAKE_FLAGS $@
+#		fi
 	fi
 	ret=$?
+	echo "pico ret=$ret"
+	if [ "$ret" = "0" ]; then
+		echo "***************************"
+		ls -lR $PICO_OUT/libs
+		echo "***************************"
+	fi
 	popd
 	return $ret
 }
@@ -309,9 +316,12 @@ function build_dsplib(){
 #		fi
 	fi
 	ret=$?
-	echo "***************************"
-	ls -lR $DSPLIB_OUT/libs
-	echo "***************************"
+	echo "dsplib ret=$ret"
+	if [ "$ret" = "0" ]; then
+		echo "***************************"
+		ls -lR $DSP_OUT/lib/libs
+		echo "***************************"
+	fi
 	popd
 	return $ret
 }
