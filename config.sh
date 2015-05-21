@@ -86,7 +86,7 @@ case "$1" in
 	export TARGET_ARCH=x86_64 &&
 	echo TARGET_OS=${TARGET_OS} >> .tmp-config &&
 	echo TARGET_ARCH=${TARGET_ARCH} >> .tmp-config &&
-	repo_sync cv
+	repo_sync bcv
 	;;
 
 "ubuntu-x86_32")
@@ -94,7 +94,7 @@ case "$1" in
 	export TARGET_ARCH=x86_32 &&
 	echo TARGET_OS=${TARGET_OS} >> .tmp-config &&
 	echo TARGET_ARCH=${TARGET_ARCH} >> .tmp-config &&
-	repo_sync cv
+	repo_sync bcv
 	;;
 
 "NDK-arm")
@@ -103,7 +103,7 @@ case "$1" in
 	export TARGET_ARCH=arm &&
 	echo TARGET_OS=${TARGET_OS} >> .tmp-config &&
 	echo TARGET_ARCH=${TARGET_ARCH} >> .tmp-config &&
-	repo_sync cv
+	repo_sync bcv
 	;;
 
 "NDK-arm_64")
@@ -111,7 +111,7 @@ case "$1" in
 	export TARGET_ARCH=arm_64 &&
 	echo TARGET_OS=${TARGET_OS} >> .tmp-config &&
 	echo TARGET_ARCH=${TARGET_ARCH} >> .tmp-config &&
-	repo_sync cv
+	repo_sync bcv
 	;;
 
 "NDK-x86_32")
@@ -119,7 +119,7 @@ case "$1" in
 	export TARGET_ARCH=x86_32 &&
 	echo TARGET_OS=${TARGET_OS} >> .tmp-config &&
 	echo TARGET_ARCH=${TARGET_ARCH} >> .tmp-config &&
-	repo_sync cv
+	repo_sync bcv
 	;;
 
 "NDK-x86_64")
@@ -127,7 +127,7 @@ case "$1" in
 	export TARGET_ARCH=x86_64 &&
 	echo TARGET_OS=${TARGET_OS} >> .tmp-config &&
 	echo TARGET_ARCH=${TARGET_ARCH} >> .tmp-config &&
-	repo_sync cv
+	repo_sync bcv
 	;;
 
 "NDK-mips")
@@ -135,7 +135,7 @@ case "$1" in
 	export TARGET_ARCH=mips &&
 	echo TARGET_OS=${TARGET_OS} >> .tmp-config &&
 	echo TARGET_ARCH=${TARGET_ARCH} >> .tmp-config &&
-	repo_sync cv
+	repo_sync bcv
 	;;
 
 "NDK-all")
@@ -145,7 +145,7 @@ case "$1" in
 	export TARGET_ARCH="\"arm x86_32\"" &&
 	echo TARGET_OS=${TARGET_OS} >> .tmp-config &&
 	echo TARGET_ARCH=${TARGET_ARCH} >> .tmp-config &&
-	repo_sync cv
+	repo_sync bcv
 	;;
 
 *)
