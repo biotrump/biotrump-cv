@@ -273,7 +273,7 @@ else
 	echo "${DSP_HOME}/LAPACK does not exist!"
 fi
 #############################################
-#ffts
+#dsp/ffts
 #############################################
 if [ -d ${DSP_HOME}/ffts ]; then
 	FFTS_DIR=${FFTS_DIR:-${DSP_HOME}/ffts}
@@ -285,6 +285,34 @@ if [ -d ${DSP_HOME}/ffts ]; then
 	fi
 else
 	echo "${DSP_HOME}/ffts does not exist!"
+fi
+#############################################
+#dsp/ffte
+#############################################
+if [ -d ${DSP_HOME}/ffte ]; then
+	FFTE_DIR=${FFTE_DIR:-${DSP_HOME}/ffte}
+	echo FFTE_DIR=${FFTE_DIR} >> .tmp-config
+	FFTE_OUT=${FFTE_OUT:-${DSP_OUT}/ffte}
+	echo FFTE_OUT=${FFTE_OUT} >> .tmp-config
+	if [ ! -d ${FFTE_OUT} ]; then
+		mkdir -p ${FFTE_OUT}
+	fi
+else
+	echo "${DSP_HOME}/ffte does not exist!"
+fi
+#############################################
+#dsp/nufft
+#############################################
+if [ -d ${DSP_HOME}/nufft ]; then
+	NUFFT_DIR=${NUFFT_DIR:-${DSP_HOME}/nufft}
+	echo NUFFT_DIR=${NUFFT_DIR} >> .tmp-config
+	NUFFT_OUT=${NUFFT_OUT:-${DSP_OUT}/nufft}
+	echo NUFFT_OUT=${NUFFT_OUT} >> .tmp-config
+	if [ ! -d ${NUFFT_OUT} ]; then
+		mkdir -p ${NUFFT_OUT}
+	fi
+else
+	echo "${DSP_HOME}/nufft does not exist!"
 fi
 #############################################
 #blis

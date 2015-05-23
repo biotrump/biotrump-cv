@@ -346,6 +346,34 @@ function build_ffts(){
 	return $ret
 }
 
+function build_ffte(){
+	ret=0
+	pushd ${FFTE_DIR}
+	if [ "$TARGET_OS" == "ubuntu" ]; then
+		./build_x86.sh $MAKE_FLAGS $@
+	fi
+	if [ "$TARGET_OS" == "NDK" ]; then
+		./NDK_all.sh $@
+	fi
+	ret=$?
+	popd
+	return $ret
+}
+
+function build_nufft(){
+	ret=0
+	pushd ${NUFFT_DIR}
+	if [ "$TARGET_OS" == "ubuntu" ]; then
+		./build_x86.sh $MAKE_FLAGS $@
+	fi
+	if [ "$TARGET_OS" == "NDK" ]; then
+		./NDK_all.sh $@
+	fi
+	ret=$?
+	popd
+	return $ret
+}
+
 function build_rppg(){
 	ret=0
 	pushd ${rPPG_DIR}
@@ -389,7 +417,9 @@ fi
 if [ "$TARGET_OS" == "NDK" ]; then
 	build_picort-lib $*
 	build_ffts $*
-	build_opencv $*
+	build_ffte $*
+	build_nufft $*
+#	build_opencv $*
 	build_blis  $*
 	build_lapack $*
 	build_dsplib $*
@@ -432,6 +462,18 @@ else
 			echo "building ffts only..."
 			shift
 			build_ffts $*
+			;;
+
+		"ffte")
+			echo "building ffte only..."
+			shift
+			build_ffte $*
+			;;
+
+		"nufft")
+			echo "building nufft only..."
+			shift
+			build_nufft $*
 			;;
 
 		"blis")

@@ -19,6 +19,10 @@ export	DSPLIB_DIR &&
 export	DSPLIB_OUT &&
 export	FFTS_DIR &&
 export	FFTS_OUT &&
+export	FFTE_DIR &&
+export	FFTE_OUT &&
+export	NUFFT_DIR &&
+export	NUFFT_OUT &&
 export	BLIS_DIR &&
 export	BLIS_OUT &&
 export	LAPACK_SRC &&
