@@ -98,25 +98,34 @@ case "$1" in
 	;;
 
 "NDK-arm")
-	#32bit
+	#armv5 32bit
 	export TARGET_OS=NDK &&
-	export TARGET_ARCH=arm &&
+	export TARGET_ARCH=armeabi &&
 	echo TARGET_OS=${TARGET_OS} >> .tmp-config &&
 	echo TARGET_ARCH=${TARGET_ARCH} >> .tmp-config &&
 	repo_sync bcv
 	;;
 
-"NDK-arm_64")
+"NDK-armv7a")
+	#armv7a 32bit
 	export TARGET_OS=NDK &&
-	export TARGET_ARCH=arm_64 &&
+	export TARGET_ARCH=armeabi-v7a &&
+	echo TARGET_OS=${TARGET_OS} >> .tmp-config &&
+	echo TARGET_ARCH=${TARGET_ARCH} >> .tmp-config &&
+	repo_sync bcv
+	;;
+"NDK-arm64-v8a")
+	export TARGET_OS=NDK &&
+	export TARGET_ARCH=arm64-v8a &&
 	echo TARGET_OS=${TARGET_OS} >> .tmp-config &&
 	echo TARGET_ARCH=${TARGET_ARCH} >> .tmp-config &&
 	repo_sync bcv
 	;;
 
-"NDK-x86_32")
+"NDK-x86")
+	#x86_32
 	export TARGET_OS=NDK &&
-	export TARGET_ARCH=x86_32 &&
+	export TARGET_ARCH=x86 &&
 	echo TARGET_OS=${TARGET_OS} >> .tmp-config &&
 	echo TARGET_ARCH=${TARGET_ARCH} >> .tmp-config &&
 	repo_sync bcv
@@ -138,11 +147,19 @@ case "$1" in
 	repo_sync bcv
 	;;
 
+"NDK-mips64")
+	export TARGET_OS=NDK &&
+	export TARGET_ARCH=mips64 &&
+	echo TARGET_OS=${TARGET_OS} >> .tmp-config &&
+	echo TARGET_ARCH=${TARGET_ARCH} >> .tmp-config &&
+	repo_sync bcv
+	;;
+
 "NDK-all")
 	#build all targets under NDK
-	#echo TARGET_ARCH="arm arm_64 x86_32 x86_64 mips" >> .tmp-config &&
+	#echo TARGET_ARCH="armeabi armeabi-v7a arm64_v8a x86 x86_64 mips mips64" >> .tmp-config &&
 	export TARGET_OS=NDK &&
-	export TARGET_ARCH="\"arm x86_32\"" &&
+	export TARGET_ARCH="\"all\"" &&
 	echo TARGET_OS=${TARGET_OS} >> .tmp-config &&
 	echo TARGET_ARCH=${TARGET_ARCH} >> .tmp-config &&
 	repo_sync bcv
@@ -156,12 +173,14 @@ case "$1" in
 	echo Valid devices to configure are:
 	echo - ubuntu-x86_64
 	echo - ubuntu-x86_32
-	echo - NDK-arm
-	echo - NDK-arm_64
-	echo - NDK-x86_32
+	echo - NDK-armeabi
+	echo - NDK-armeabi-v7a
+	echo - NDK-arm64_v8a
+	echo - NDK-x86
 	echo - NDK-x86_64
 	echo - NDK-mips
-	echo - "NDK-all(arm_32,arm_64,x86_32,x86_64,mips)"
+	echo - NDK-mips64
+	echo - NDK-all
 
 	exit -1
 	;;
