@@ -269,6 +269,9 @@ function build_blis(){
 		./build_x86.sh $MAKE_FLAGS $@
 	fi
 	if [ "$TARGET_OS" == "NDK" ]; then
+		if [ "$TARGET_ARCH" == "all" ]; then
+			./build_NDK.sh $TARGET_ARCH $MAKE_FLAGS $@
+		fi
 		if [ "$TARGET_ARCH" == "arm" ]; then
 			./build_NDK.sh $TARGET_ARCH $MAKE_FLAGS $@
 		fi
