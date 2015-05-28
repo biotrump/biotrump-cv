@@ -33,8 +33,8 @@ CYGWIN*)
 	exit -1
 esac
 
-#GITREPO=${GITREPO:-"https://github.com/biotrump/manifest-cv"}
-GITREPO=${GITREPO:-"git@192.168.9.54:bcv/manifest-cv.git"}
+GITREPO=${GITREPO:-"https://github.com/biotrump/manifest-cv"}
+#GITREPO=${GITREPO:-"git@192.168.9.54:bcv/manifest-cv.git"}
 BRANCH=${BRANCH:-master}
 #BRANCH=${BRANCH:-opencv-2.4.x}
 
