@@ -34,9 +34,9 @@ CYGWIN*)
 esac
 
 #github
-GITREPO=${GITREPO:-"https://github.com/biotrump/manifest-cv.git"}
+#GITREPO=${GITREPO:-"https://github.com/biotrump/manifest-cv.git"}
 #gitlab
-#GITREPO=${GITREPO:-"git@192.168.9.54:bcv/manifest-cv.git"}
+GITREPO=${GITREPO:-"git@192.168.9.54:bcv/manifest-cv.git"}
 #bitbucket
 #GITREPO=${GITREPO:-"https://bitbucket.org/thomastsai/manifest-cv.git"}
 
